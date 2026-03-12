@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panchanga 2026 — Shri Krishna Vrundavana</title>
+
+<!-- PWA -->
+
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#E8650A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Panchanga 2026">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+
+<!-- No stale cache -->
+
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange:       #E8650A;
+    --orange-mid:   #F5820A;
+    --orange-pale:  #FFF3E8;
+    --orange-light: #FFE0C0;
+    --bg:           #F7F7F7;
+    --panel:        #FFFFFF;
+    --border:       #F0D8C0;
+    --text:         #1C0800;
+    --text-body:    #3D2010;
+    --text-muted:   #907050;
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(–bg);
+color: var(–text-body);
+font-family: ‘EB Garamond’, serif;
+min-height: 100vh;
+}
+
+/* HEADER — compact single row */
+.header {
+background: linear-gradient(135deg, #D45C08 0%, #F07010 50%, #D45C08 100%);
+padding: 10px 16px;
+display: flex;
+align-items: center;
+gap: 10px;
+position: relative;
+box-shadow: 0 2px 10px rgba(200,80,0,0.2);
+}
+.header::before {
+content: ‘’;
+position: absolute; inset: 0;
+background: url(“data:image/svg+xml,%3Csvg width=‘60’ height=‘60’ viewBox=‘0 0 60 60’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cg fill=’%23fff’ fill-opacity=‘0.06’%3E%3Cpath d=‘M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z’/%3E%3C/g%3E%3C/svg%3E”);
+pointer-events: none;
+}
+.header::after {
+content: ‘’;
+position: absolute; bottom: 0; left: 0; right: 0;
+height: 2px;
+background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+}
+.header-om {
+font-family: ‘Cinzel Decorative’, serif;
+font-size: 1.3rem;
+color: #fff;
+flex-shrink: 0;
+line-height: 1;
+}
+.header-text {
+flex: 1;
+min-width: 0;
+display: flex;
+flex-direction: column;
+gap: 1px;
+}
+.header-text h1 {
+font-family: ‘Cinzel’, serif;
+font-size: 0.88rem;
+color: #fff;
+letter-spacing: 0.05em;
+font-weight: 700;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+.header-text p {
+font-size: 0.62rem;
+color: rgba(255,255,255,0.78);
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+.header-samvat { display: none; }
+
+/* LAYOUT */
+.app-container {
+display: flex;
+flex-direction: column;
+max-width: 900px;
+margin: 0 auto;
+padding: 12px 16px 40px;
+gap: 12px;
+}
+
+/* CALENDAR */
+.sidebar {
+background: var(–panel);
+border: 1px solid var(–border);
+border-radius: 12px;
+padding: 14px 16px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.month-nav {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 10px;
+}
+.month-nav button {
+background: var(–orange-pale);
+border: 1.5px solid var(–orange-light);
+color: var(–orange);
+width: 34px; height: 34px;
+border-radius: 50%;
+cursor: pointer;
+font-size: 1.2rem;
+font-weight: 700;
+transition: all 0.18s;
+display: flex; align-items: center; justify-content: center;
+}
+.month-nav button:hover { background: var(–orange); color: #fff; border-color: var(–orange); }
+.month-name {
+font-family: ‘Cinzel’, serif;
+font-size: 1.2rem;
+font-weight: 700;
+color: var(–orange);
+letter-spacing: 0.1em;
+text-align: center;
+}
+.month-year { font-size: 0.8rem; color: var(–text-muted); text-align: center; margin-top: 2px; }
+
+.calendar-grid {
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 5px;
+}
+.day-header {
+text-align: center;
+font-family: ‘Cinzel’, serif;
+font-size: 0.58rem;
+font-weight: 700;
+color: var(–orange);
+letter-spacing: 0.06em;
+padding: 6px 0;
+text-transform: uppercase;
+}
+.cal-day {
+background: #fff;
+border: 1px solid #EEE0D0;
+border-radius: 6px;
+padding: 5px 3px;
+cursor: pointer;
+transition: all 0.18s;
+min-height: 46px;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 2px;
+position: relative;
+}
+.cal-day:hover { background: var(–orange-pale); border-color: var(–orange-light); }
+.cal-day.selected { background: var(–orange-pale); border-color: var(–orange); box-shadow: 0 0 0 2px rgba(232,101,10,0.15); }
+.cal-day.today .day-num {
+background: var(–orange);
+color: #fff;
+border-radius: 50%;
+width: 24px; height: 24px;
+display: flex; align-items: center; justify-content: center;
+font-weight: 700;
+}
+.cal-day.special::after {
+content: ‘●’;
+font-size: 0.3rem;
+color: var(–orange);
+position: absolute;
+bottom: 4px; right: 5px;
+}
+.cal-day.empty { background: transparent; border-color: transparent; cursor: default; }
+.cal-day.amavasya { border-color: #E8B0A0; background: #FFF8F6; }
+.cal-day.poornima { border-color: #B8D890; background: #F6FFF0; }
+
+.day-num {
+font-family: ‘Cinzel’, serif;
+font-size: 0.85rem;
+font-weight: 600;
+color: var(–text);
+line-height: 1;
+}
+.day-tithi {
+font-size: 0.5rem;
+color: var(–text-muted);
+text-align: center;
+line-height: 1.2;
+overflow: hidden;
+max-height: 18px;
+}
+
+/* MAIN PANEL */
+.main-panel { width: 100%; }
+
+.day-detail-card {
+background: var(–panel);
+border: 1px solid var(–border);
+border-top: 3px solid var(–orange);
+border-radius: 12px;
+padding: 16px 18px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+.detail-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 10px;
+margin-bottom: 8px;
+padding-bottom: 8px;
+border-bottom: 1px solid var(–border);
+}
+.detail-header-left { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.detail-date-big {
+font-family: ‘Cinzel Decorative’, serif;
+font-size: 2.4rem;
+color: var(–orange);
+line-height: 1;
+}
+.detail-date-text { }
+.detail-day-name {
+font-family: ‘Cinzel’, serif;
+font-size: 0.72rem;
+color: var(–text);
+letter-spacing: 0.1em;
+text-transform: uppercase;
+font-weight: 700;
+}
+.detail-month-year {
+font-size: 0.68rem;
+color: var(–text-muted);
+font-style: italic;
+margin-top: 1px;
+}
+/* 5-tile row: Ayana Rutu Chandra Soura Samvat */
+.cal-info-grid {
+display: flex;
+gap: 6px;
+flex: 1;
+justify-content: flex-end;
+flex-wrap: wrap;
+}
+.cal-info-item {
+background: var(–orange-pale);
+border: 1px solid var(–orange-light);
+border-radius: 6px;
+padding: 4px 8px;
+min-width: 70px;
+flex: 1;
+max-width: 110px;
+}
+.cal-info-label {
+font-family: ‘Cinzel’, serif;
+font-size: 0.38rem;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(–orange);
+font-weight: 700;
+margin-bottom: 1px;
+white-space: nowrap;
+}
+.cal-info-value {
+font-family: ‘EB Garamond’, serif;
+font-size: 0.75rem;
+font-weight: 600;
+color: var(–text);
+line-height: 1.2;
+}
+
+/* PANCHANGA CARDS */
+.pancha-grid {
+display: grid;
+grid-template-columns: repeat(6, 1fr);
+gap: 6px;
+margin-bottom: 8px;
+}
+.pancha-card {
+background: var(–orange-pale);
+border: 1px solid var(–orange-light);
+border-radius: 6px;
+padding: 4px 8px;
+text-align: left;
+transition: all 0.18s;
+}
+.pancha-card:hover {
+border-color: var(–orange);
+box-shadow: 0 2px 6px rgba(232,101,10,0.1);
+}
+.pancha-label {
+font-family: ‘Cinzel’, serif;
+font-size: 0.38rem;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(–orange);
+font-weight: 700;
+margin-bottom: 1px;
+white-space: nowrap;
+}
+.pancha-icon { display: none; }
+.pancha-value {
+font-family: ‘EB Garamond’, serif;
+font-size: 0.75rem;
+font-weight: 600;
+color: var(–text);
+line-height: 1.2;
+}
+.pancha-time { font-size: 0.56rem; color: var(–text-muted); margin-top: 1px; }
+
+/* SPECIAL BANNER */
+.special-day-banner {
+background: linear-gradient(135deg, #FFF3E8, #FFE8CC);
+border: 1px solid var(–orange-light);
+border-left: 3px solid var(–orange);
+border-radius: 8px;
+padding: 9px 14px;
+margin-bottom: 10px;
+display: flex;
+align-items: flex-start;
+gap: 10px;
+}
+.special-day-banner .icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.special-day-banner h4 {
+font-family: ‘Cinzel’, serif;
+font-size: 0.58rem;
+color: var(–orange);
+letter-spacing: 0.1em;
+text-transform: uppercase;
+font-weight: 700;
+margin-bottom: 3px;
+}
+.special-day-banner p { font-size: 0.8rem; color: var(–text-body); line-height: 1.5; }
+
+/* SPECIAL DAYS BOTTOM */
+.special-days-section {
+background: var(–panel);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 24px;
+box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.special-days-section h3 {
+font-family: ‘Cinzel’, serif;
+font-size: 0.82rem;
+color: var(–orange);
+letter-spacing: 0.1em;
+text-transform: uppercase;
+font-weight: 700;
+margin-bottom: 16px;
+padding-bottom: 10px;
+border-bottom: 1.5px solid var(–border);
+}
+#special-days-list {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+gap: 6px;
+}
+.special-item {
+display: flex;
+gap: 10px;
+padding: 9px 12px;
+background: #fff;
+border: 1px solid #EEE0D0;
+border-radius: 8px;
+font-size: 0.78rem;
+line-height: 1.4;
+cursor: pointer;
+transition: all 0.18s;
+}
+.special-item:hover { background: var(–orange-pale); border-color: var(–orange-light); }
+.special-date { font-family: ‘Cinzel’, serif; font-weight: 700; color: var(–orange); flex-shrink: 0; min-width: 22px; }
+.special-desc { color: var(–text-body); }
+
+/* EMPTY */
+.no-data { text-align: center; padding: 48px 24px; color: var(–text-muted); }
+.no-data .big-om {
+font-family: ‘Cinzel Decorative’, serif;
+font-size: 3rem;
+color: rgba(232,101,10,0.15);
+display: block;
+margin-bottom: 16px;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #F5EEE8; }
+::-webkit-scrollbar-thumb { background: var(–orange-light); border-radius: 3px; }
+
+@media (max-width: 680px) {
+.app-container { padding: 8px 10px 32px; gap: 8px; }
+.header { padding: 8px 14px; }
+.header-om { font-size: 1.1rem; }
+.header-text h1 { font-size: 0.82rem; }
+.header-text p { display: none; }
+
+```
+/* Detail header: stack left+tiles */
+.detail-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+.detail-date-big { font-size: 2.2rem; }
+.cal-info-grid { width: 100%; flex-wrap: wrap; justify-content: flex-start; }
+.cal-info-item { min-width: 80px; max-width: none; flex: 1; }
+
+/* Pancha grid: 3 cols */
+.pancha-grid { grid-template-columns: repeat(3, 1fr); gap: 5px; }
+
+/* Special days: single col */
+#special-days-list { grid-template-columns: 1fr; }
+
+.day-detail-card { padding: 12px 12px; }
+.sidebar { padding: 10px 12px; }
+```
+
+}
+
+/* UPDATE BANNER */
+#update-banner {
+display: none;
+position: fixed;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+background: var(–orange);
+color: #fff;
+padding: 10px 20px;
+border-radius: 24px;
+font-family: ‘Cinzel’, serif;
+font-size: 0.75rem;
+font-weight: 700;
+letter-spacing: 0.05em;
+box-shadow: 0 4px 16px rgba(232,101,10,0.4);
+cursor: pointer;
+z-index: 9999;
+white-space: nowrap;
+animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { opacity:0; transform: translateX(-50%) translateY(10px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+</style>
+
+</head>
+<body>
+
+<div id="update-banner" onclick="applyUpdate()">🔄 New update available — tap to refresh</div>
+
+<div class="header">
+  <div class="header-om">ॐ</div>
+  <div class="header-text">
+    <h1>Shri Krishna Vrundavana</h1>
+    <p>Panchanga 2026 · Cary, NC</p>
+  </div>
+</div>
+
+<div class="app-container">
+  <div class="sidebar">
+    <div class="month-nav">
+      <button onclick="changeMonth(-1)">‹</button>
+      <div>
+        <div class="month-name" id="month-title">JANUARY</div>
+        <div class="month-year">2026</div>
+      </div>
+      <button onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="calendar-grid" id="calendar-grid"></div>
+  </div>
+
+  <div class="main-panel" id="main-panel">
+    <div class="day-detail-card" id="detail-card">
+      <div class="no-data">
+        <span class="big-om">ॐ</span>
+        <p>Select a date to view Panchanga details</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="special-days-section" id="special-days-section">
+    <h3>✦ Special Days — <span id="special-month-label">January</span> 2026</h3>
+    <div id="special-days-list"></div>
+  </div>
+</div>
+
+<script>
+const MONTHS = ["JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"];
+const MONTH_NAMES_TITLE = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+// Precise per-day calendar info
+// Each entry: [month(0-based), day, ayana, rutu, chandra_masa, soura_masa, samvat]
+// Transitions sourced from the 2026 Panchanga PDF
+const TRANSITIONS = [
+  // Jan 1 start
+  { from: [0,1],  ayana:"Uttarayanam",   rutu:"Hemanta",    chandra:"Pausha",          soura:"Dhanu",       samvat:"Vishwaavasu" },
+  // Jan 14 - Makara Sankramana: Soura Makara begins, Shishira Rutu begins
+  { from: [0,14], ayana:"Uttarayanam",   rutu:"Shishira",   chandra:"Pausha",          soura:"Makara",      samvat:"Vishwaavasu" },
+  // Jan 19 - Makha masa begins (Chandra)
+  { from: [0,19], ayana:"Uttarayanam",   rutu:"Shishira",   chandra:"Makha",           soura:"Makara",      samvat:"Vishwaavasu" },
+  // Feb 12 - Kumbha Sankramana: Soura Kumbha begins
+  { from: [1,12], ayana:"Uttarayanam",   rutu:"Shishira",   chandra:"Makha",           soura:"Kumbha",      samvat:"Vishwaavasu" },
+  // Feb 17 - Phalguna masa begins (Chandra)
+  { from: [1,17], ayana:"Uttarayanam",   rutu:"Shishira",   chandra:"Phalguna",        soura:"Kumbha",      samvat:"Vishwaavasu" },
+  // Mar 14 - Meena Sankramana: Soura Meena begins
+  { from: [2,14], ayana:"Uttarayanam",   rutu:"Shishira",   chandra:"Phalguna",        soura:"Meena",       samvat:"Vishwaavasu" },
+  // Mar 19 - Chandra Yugadi: Chaitra masa & Vasanta Rutu begin; Paraabhava Samvat begins
+  { from: [2,19], ayana:"Uttarayanam",   rutu:"Vasanta",    chandra:"Chaitra",         soura:"Meena",       samvat:"Paraabhava" },
+  // Apr 14 - Mesha Sankramana (Soura Yugadi): Soura Mesha begins
+  { from: [3,14], ayana:"Uttarayanam",   rutu:"Vasanta",    chandra:"Chaitra",         soura:"Mesha",       samvat:"Paraabhava" },
+  // Apr 18 - Vaishakha masa begins (Chandra)
+  { from: [3,18], ayana:"Uttarayanam",   rutu:"Vasanta",    chandra:"Vaishakha",       soura:"Mesha",       samvat:"Paraabhava" },
+  // May 15 - Vrishabha Sankramana; Greeshma Rutu begins
+  { from: [4,15], ayana:"Uttarayanam",   rutu:"Greeshma",   chandra:"Vaishakha",       soura:"Vrishabha",   samvat:"Paraabhava" },
+  // May 17 - Adhika Jyeshtha masa begins (Chandra)
+  { from: [4,17], ayana:"Uttarayanam",   rutu:"Greeshma",   chandra:"Adhika Jyeshtha", soura:"Vrishabha",   samvat:"Paraabhava" },
+  // Jun 15 - Mithuna Sankramana; Soura Mithuna begins; Nija Jyeshtha begins (Chandra)
+  { from: [5,15], ayana:"Uttarayanam",   rutu:"Greeshma",   chandra:"Nija Jyeshtha",   soura:"Mithuna",     samvat:"Paraabhava" },
+  // Jul 14 - Ashadha masa begins (Chandra)
+  { from: [6,14], ayana:"Uttarayanam",   rutu:"Greeshma",   chandra:"Ashadha",         soura:"Mithuna",     samvat:"Paraabhava" },
+  // Jul 16 - Karkataka Sankramana; Dakshinayanam begins
+  { from: [6,16], ayana:"Dakshinayanam", rutu:"Greeshma",   chandra:"Ashadha",         soura:"Karkataka",   samvat:"Paraabhava" },
+  // Aug 13 - Shravana masa begins (Chandra); Varsha Rutu begins
+  { from: [7,13], ayana:"Dakshinayanam", rutu:"Varsha",     chandra:"Shravana",        soura:"Karkataka",   samvat:"Paraabhava" },
+  // Aug 16 - Simha Sankramana
+  { from: [7,16], ayana:"Dakshinayanam", rutu:"Varsha",     chandra:"Shravana",        soura:"Simha",       samvat:"Paraabhava" },
+  // Sep 11 - Bhadrapada masa begins (Chandra)
+  { from: [8,11], ayana:"Dakshinayanam", rutu:"Varsha",     chandra:"Bhadrapada",      soura:"Simha",       samvat:"Paraabhava" },
+  // Sep 16 - Kanya Sankramana
+  { from: [8,16], ayana:"Dakshinayanam", rutu:"Varsha",     chandra:"Bhadrapada",      soura:"Kanya",       samvat:"Paraabhava" },
+  // Oct 11 - Ashvayuja masa begins; Sharad Rutu begins (Chandra)
+  { from: [9,11], ayana:"Dakshinayanam", rutu:"Sharad",     chandra:"Ashvayuja",       soura:"Kanya",       samvat:"Paraabhava" },
+  // Oct 17 - Tula Sankramana
+  { from: [9,17], ayana:"Dakshinayanam", rutu:"Sharad",     chandra:"Ashvayuja",       soura:"Tula",        samvat:"Paraabhava" },
+  // Nov 9 - Kartika masa begins (Chandra)
+  { from: [10,9], ayana:"Dakshinayanam", rutu:"Sharad",     chandra:"Kartika",         soura:"Tula",        samvat:"Paraabhava" },
+  // Nov 16 - Vrishchika Sankramana
+  { from: [10,16],ayana:"Dakshinayanam", rutu:"Sharad",     chandra:"Kartika",         soura:"Vrishchika",  samvat:"Paraabhava" },
+  // Dec 9 - Margashira masa begins (Chandra); Hemanta Rutu begins
+  { from: [11,9], ayana:"Dakshinayanam", rutu:"Hemanta",    chandra:"Margashira",      soura:"Vrishchika",  samvat:"Paraabhava" },
+  // Dec 15 - Dhanu Sankramana
+  { from: [11,15],ayana:"Dakshinayanam", rutu:"Hemanta",    chandra:"Margashira",      soura:"Dhanu",       samvat:"Paraabhava" },
+];
+
+// Also keep SAMVAT_INFO for header strip (monthly overview)
+const SAMVAT_INFO = {
+  0: { samvat: "Vishwaavasu", ayana: "Uttarayanam", rutu: "Hemanta/Shishira", chandra: "Pausha/Makha", soura: "Dhanu/Makara" },
+  1: { samvat: "Vishwaavasu", ayana: "Uttarayanam", rutu: "Shishira", chandra: "Makha/Phalguna", soura: "Makara/Kumbha" },
+  2: { samvat: "Vishwaavasu/Paraabhava", ayana: "Uttarayanam", rutu: "Shishira/Vasanta", chandra: "Phalguna/Chaitra", soura: "Kumbha/Meena" },
+  3: { samvat: "Paraabhava", ayana: "Uttarayanam", rutu: "Vasanta", chandra: "Chaitra/Vaishakha", soura: "Meena/Mesha" },
+  4: { samvat: "Paraabhava", ayana: "Uttarayanam", rutu: "Vasanta/Greeshma", chandra: "Vaishakha/Adhika Jyeshtha", soura: "Mesha/Vrishabha" },
+  5: { samvat: "Paraabhava", ayana: "Uttarayanam", rutu: "Greeshma", chandra: "Adhika/Nija Jyeshtha", soura: "Vrishabha/Mithuna" },
+  6: { samvat: "Paraabhava", ayana: "Dakshinayanam", rutu: "Greeshma", chandra: "Nija Jyeshtha/Ashadha", soura: "Mithuna/Karkataka" },
+  7: { samvat: "Paraabhava", ayana: "Dakshinayanam", rutu: "Greeshma/Varsha", chandra: "Ashadha/Shravana", soura: "Karkataka/Simha" },
+  8: { samvat: "Paraabhava", ayana: "Dakshinayanam", rutu: "Varsha", chandra: "Shravana/Bhadrapada", soura: "Simha/Kanya" },
+  9: { samvat: "Paraabhava", ayana: "Dakshinayanam", rutu: "Varsha/Sharad", chandra: "Bhadrapada/Ashvauja", soura: "Kanya/Tula" },
+  10: { samvat: "Paraabhava", ayana: "Dakshinayanam", rutu: "Sharad", chandra: "Ashvauja/Kartika", soura: "Tula/Vruschika" },
+  11: { samvat: "Paraabhava", ayana: "Dakshinayanam", rutu: "Sharad/Hemanta", chandra: "Kartika/Margashira", soura: "Vruschika/Dhanu" }
+};
+
+// Returns precise calendar info for a given month (0-based) and day
+function getCalInfo(month, day) {
+  let result = TRANSITIONS[0];
+  for (const t of TRANSITIONS) {
+    const [tm, td] = t.from;
+    if (month > tm || (month === tm && day >= td)) {
+      result = t;
+    } else {
+      break;
+    }
+  }
+  return result;
+}
+
+const DAY_DATA = {
+  "0-1": { tithi:"Trayodashi", tithi_end:"11:52AM", nakshatra:"Rohini", nakshatra_end:"12:18PM", yoga:"Shukla", karana:"Taitila" },
+  "0-2": { tithi:"Chaturdashi", tithi_end:"8:23AM", tithi2:"Poornima", tithi2_end:"5:02AM(Sa)", nakshatra:"Mrigashira", nakshatra_end:"9:33AM", nakshatra2:"Ardra", nakshatra2_end:"6:57AM(Sa)", yoga:"Brahma", karana:"Vanija" },
+  "0-3": { tithi:"Pratipada", tithi_end:"2:00AM(Su)", nakshatra:"Punarvasu", nakshatra_end:"4:41AM(Su)", yoga:"Aindra", karana:"Balava" },
+  "0-4": { tithi:"Dwiteeya", tithi_end:"11:26PM", nakshatra:"Pushya", nakshatra_end:"2:54AM(M)", yoga:"Vaidhriti", karana:"Taitila" },
+  "0-5": { tithi:"Triteeya", tithi_end:"9:31PM", nakshatra:"Ashlesha", nakshatra_end:"1:47AM", yoga:"Vishkambha", karana:"Vanija" },
+  "0-6": { tithi:"Chaturthi", tithi_end:"8:22PM", nakshatra:"Makha", nakshatra_end:"1:26AM(W)", yoga:"Priti", karana:"Bava" },
+  "0-7": { tithi:"Panchami", tithi_end:"8:03PM", nakshatra:"P.Phalguni", nakshatra_end:"1:54AM(Th)", yoga:"Ayushman", karana:"Kaulava" },
+  "0-8": { tithi:"Shashti", tithi_end:"8:35PM", nakshatra:"U.Phalguni", nakshatra_end:"3:10AM(F)", yoga:"Shobhana", karana:"Garaja" },
+  "0-9": { tithi:"Saptami", tithi_end:"9:54PM", nakshatra:"Hasta", nakshatra_end:"5:09AM(Sa)", yoga:"Atiganda", karana:"Vishti" },
+  "0-10": { tithi:"Ashtami", tithi_end:"11:50PM", nakshatra:"Chitra", nakshatra_end:"Full Night", yoga:"Sukarma", karana:"Balava" },
+  "0-11": { tithi:"Navami", tithi_end:"2:13AM(M)", nakshatra:"Chitra", nakshatra_end:"7:41AM", yoga:"Dhriti", karana:"Taitila" },
+  "0-12": { tithi:"Dashami", tithi_end:"4:48AM(Tu)", nakshatra:"Swati", nakshatra_end:"10:35AM", yoga:"Dhriti", karana:"Vanija" },
+  "0-13": { tithi:"Ekadashi", tithi_end:"7:22AM(W)", nakshatra:"Vishakha", nakshatra_end:"1:36PM", yoga:"Shoola", karana:"Bava" },
+  "0-14": { tithi:"Dwadashi", tithi_end:"Full Night", nakshatra:"Anuradha", nakshatra_end:"4:33PM", yoga:"Ganda", karana:"Kaulava" },
+  "0-15": { tithi:"Dwadashi", tithi_end:"9:46AM", nakshatra:"Jyeshtha", nakshatra_end:"7:17PM", yoga:"Vriddhi", karana:"Taitila" },
+  "0-16": { tithi:"Trayodashi", tithi_end:"11:51AM", nakshatra:"Moola", nakshatra_end:"9:42PM", yoga:"Dhruva", karana:"Vanija" },
+  "0-17": { tithi:"Chaturdashi", tithi_end:"1:34PM", nakshatra:"P.Ashadha", nakshatra_end:"11:43PM", yoga:"Vyaghata", karana:"Shakuni" },
+  "0-18": { tithi:"Amavasya", tithi_end:"2:51PM", nakshatra:"U.Ashadha", nakshatra_end:"1:22AM(M)", yoga:"Harshana", karana:"Nagava", special:true },
+  "0-19": { tithi:"Pratipada", tithi_end:"3:44PM", nakshatra:"Shravana", nakshatra_end:"2:36AM(Tu)", yoga:"Vajra", karana:"Bava" },
+  "0-20": { tithi:"Dwiteeya", tithi_end:"4:12PM", nakshatra:"Dhanishtha", nakshatra_end:"3:28AM(W)", yoga:"Siddhi", karana:"Kaulava" },
+  "0-21": { tithi:"Triteeya", tithi_end:"4:17PM", nakshatra:"Shatabhisha", nakshatra_end:"3:56AM(Th)", yoga:"Vyatipata", karana:"Garaja" },
+  "0-22": { tithi:"Chaturthi", tithi_end:"3:58PM", nakshatra:"P.Bhadra", nakshatra_end:"4:02AM(F)", yoga:"Parigha", karana:"Vishti" },
+  "0-23": { tithi:"Panchami", tithi_end:"3:16PM", nakshatra:"U.Bhadra", nakshatra_end:"3:45AM(Sa)", yoga:"Shiva", karana:"Balava" },
+  "0-24": { tithi:"Shashti", tithi_end:"2:10PM", nakshatra:"Revati", nakshatra_end:"3:05AM(Su)", yoga:"Siddha", karana:"Taitila" },
+  "0-25": { tithi:"Saptami", tithi_end:"12:40PM", nakshatra:"Ashwini", nakshatra_end:"2:02AM(M)", yoga:"Sadhya", karana:"Vanija", special:true },
+  "0-26": { tithi:"Ashtami", tithi_end:"10:48AM", nakshatra:"Bharani", nakshatra_end:"12:38AM(Tu)", yoga:"Shubha", karana:"Bava", special:true },
+  "0-27": { tithi:"Navami", tithi_end:"8:35AM", tithi2:"Dashami", tithi2_end:"6:05AM(W)", nakshatra:"Kritika", nakshatra_end:"10:56PM", yoga:"Shukla", karana:"Kaulava", special:true },
+  "0-28": { tithi:"Ekadashi", tithi_end:"3:25AM(Th)", nakshatra:"Rohini", nakshatra_end:"9:01PM", yoga:"Brahma", karana:"Vanija" },
+  "0-29": { tithi:"Dwadashi", tithi_end:"12:39AM(F)", nakshatra:"Mrigashira", nakshatra_end:"6:59PM", yoga:"Aindra", karana:"Bava", special:true },
+  "0-30": { tithi:"Trayodashi", tithi_end:"9:55PM", nakshatra:"Ardra", nakshatra_end:"4:57PM", yoga:"Vishkambha", karana:"Kaulava" },
+  "0-31": { tithi:"Chaturdashi", tithi_end:"7:22PM", nakshatra:"Punarvasu", nakshatra_end:"3:03PM", yoga:"Priti", karana:"Garaja" },
+  "1-1": { tithi:"Poornima", tithi_end:"5:09PM", nakshatra:"Pushya", nakshatra_end:"1:27PM", yoga:"Ayushmana", karana:"Bava", special:true },
+  "1-2": { tithi:"Pratipada", tithi_end:"3:22PM", nakshatra:"Ashlesha", nakshatra_end:"12:17PM", yoga:"Saubhagya", karana:"Kaulava" },
+  "1-3": { tithi:"Dwiteeya", tithi_end:"2:10PM", nakshatra:"Makha", nakshatra_end:"11:40AM", yoga:"Shobhana", karana:"Garaja" },
+  "1-4": { tithi:"Triteeya", tithi_end:"1:39PM", nakshatra:"P.Phalguni", nakshatra_end:"11:42AM", yoga:"Atiganda", karana:"Vishti" },
+  "1-5": { tithi:"Chaturthi", tithi_end:"1:52PM", nakshatra:"U.Phalguni", nakshatra_end:"12:26PM", yoga:"Sukarman", karana:"Balava", special:true },
+  "1-6": { tithi:"Panchami", tithi_end:"2:48PM", nakshatra:"Hasta", nakshatra_end:"1:53PM", yoga:"Dhriti", karana:"Taitila" },
+  "1-7": { tithi:"Shashti", tithi_end:"4:24PM", nakshatra:"Chitra", nakshatra_end:"3:58PM", yoga:"Shoola", karana:"Vanija" },
+  "1-8": { tithi:"Saptami", tithi_end:"6:31PM", nakshatra:"Swati", nakshatra_end:"6:32PM", yoga:"Ganda", karana:"Bava" },
+  "1-9": { tithi:"Ashtami", tithi_end:"8:57PM", nakshatra:"Vishakha", nakshatra_end:"9:24PM", yoga:"Vriddhi", karana:"Balava" },
+  "1-10": { tithi:"Navami", tithi_end:"11:29PM", nakshatra:"Anuradha", nakshatra_end:"12:22AM(W)", yoga:"Dhruva", karana:"Taitila" },
+  "1-11": { tithi:"Dashami", tithi_end:"1:52AM(Th)", nakshatra:"Jyeshtha", nakshatra_end:"3:12AM(Th)", yoga:"Vyaghata", karana:"Vanija" },
+  "1-12": { tithi:"Ekadashi", tithi_end:"3:56AM(F)", nakshatra:"Moola", nakshatra_end:"5:42AM(F)", yoga:"Harshana", karana:"Bava", special:true },
+  "1-13": { tithi:"Dwadashi", tithi_end:"5:31AM(Sa)", nakshatra:"P.Ashadha", nakshatra_end:"Full Night", yoga:"Vajra", karana:"Kaulava", special:true },
+  "1-14": { tithi:"Trayodashi", tithi_end:"6:35AM(Su)", nakshatra:"P.Ashadha", nakshatra_end:"7:45AM", yoga:"Siddhi", karana:"Garaja" },
+  "1-15": { tithi:"Chaturdashi", tithi_end:"Full Night", nakshatra:"U.Ashadha", nakshatra_end:"9:18AM", yoga:"Vyatipata", karana:"Vishti", special:true },
+  "1-16": { tithi:"Chaturdashi", tithi_end:"7:04AM", tithi2:"Amavasya", tithi2_end:"7:00AM(Tu)", nakshatra:"Shravana", nakshatra_end:"10:17AM", yoga:"Variyana", karana:"Shakuni", special:true },
+  "1-17": { tithi:"Pratipada", tithi_end:"6:27AM(W)", nakshatra:"Dhanishtha", nakshatra_end:"10:45AM", yoga:"Parigha", karana:"Nagava", special:true },
+  "1-18": { tithi:"Dwiteeya", tithi_end:"5:28AM(Th)", nakshatra:"Shatabhisha", nakshatra_end:"10:46AM", yoga:"Shiva", karana:"Balava" },
+  "1-19": { tithi:"Triteeya", tithi_end:"4:08AM(F)", nakshatra:"P.Bhadrapada", nakshatra_end:"10:21AM", yoga:"Siddha", karana:"Taitila" },
+  "1-20": { tithi:"Chaturthi", tithi_end:"2:31AM(Sa)", nakshatra:"U.Bhadra", nakshatra_end:"9:37AM", yoga:"Sadhya", karana:"Vanija" },
+  "1-21": { tithi:"Panchami", tithi_end:"12:40AM(Su)", nakshatra:"Revati", nakshatra_end:"8:36AM", yoga:"Shukla", karana:"Bava" },
+  "1-22": { tithi:"Shashti", tithi_end:"10:39PM", nakshatra:"Ashwini", nakshatra_end:"7:24AM", nakshatra2:"Bharani", nakshatra2_end:"6:03AM(M)", yoga:"Brahma", karana:"Kaulava" },
+  "1-23": { tithi:"Saptami", tithi_end:"8:32PM", nakshatra:"Krittika", nakshatra_end:"4:36AM(Tu)", yoga:"Aindra", karana:"Garaja", special:true },
+  "1-24": { tithi:"Ashtami", tithi_end:"6:21PM", nakshatra:"Rohini", nakshatra_end:"3:08AM(W)", yoga:"Vaidhriti", karana:"Vishti" },
+  "1-25": { tithi:"Navami", tithi_end:"4:11PM", nakshatra:"Mrigashira", nakshatra_end:"1:41AM(Th)", yoga:"Vishkambha", karana:"Kaulava" },
+  "1-26": { tithi:"Dashami", tithi_end:"2:03PM", nakshatra:"Ardra", nakshatra_end:"12:18AM(F)", yoga:"Priti", karana:"Garaja" },
+  "1-27": { tithi:"Ekadashi", tithi_end:"12:03PM", nakshatra:"Punarvasu", nakshatra_end:"11:04PM", yoga:"Ayushman", karana:"Vishti", special:true },
+  "1-28": { tithi:"Dwadashi", tithi_end:"10:13AM", nakshatra:"Pushya", nakshatra_end:"10:04PM", yoga:"Shobhana", karana:"Balava", special:true },
+  "2-1": { tithi:"Trayodashi", tithi_end:"8:39AM", nakshatra:"Ashlesha", nakshatra_end:"9:21PM", yoga:"Atiganda", karana:"Taitila" },
+  "2-2": { tithi:"Chaturdashi", tithi_end:"7:25AM", tithi2:"Poornima", tithi2_end:"6:37AM(Tu)", nakshatra:"Makha", nakshatra_end:"9:01PM", yoga:"Sukarman", karana:"Vanija", special:true },
+  "2-3": { tithi:"Pratipada", tithi_end:"6:19AM(W)", nakshatra:"P.Phalguni", nakshatra_end:"9:08PM", yoga:"Dhriti", karana:"Balava", special:true },
+  "2-4": { tithi:"Dwiteeya", tithi_end:"6:33AM(Th)", nakshatra:"U.Phalguni", nakshatra_end:"9:47PM", yoga:"Shoola", karana:"Taitila" },
+  "2-5": { tithi:"Triteeya", tithi_end:"Full Night", nakshatra:"Hasta", nakshatra_end:"10:59PM", yoga:"Ganda", karana:"Vanija" },
+  "2-6": { tithi:"Triteeya", tithi_end:"7:23AM", nakshatra:"Chitra", nakshatra_end:"12:45AM(Sa)", yoga:"Vriddhi", karana:"Vishti", special:true },
+  "2-7": { tithi:"Chaturthi", tithi_end:"8:47AM", nakshatra:"Swati", nakshatra_end:"4:01AM(Su)", yoga:"Dhruva", karana:"Balava", special:true },
+  "2-8": { tithi:"Panchami", tithi_end:"11:41AM", nakshatra:"Vishakha", nakshatra_end:"6:41AM(M)", yoga:"Vyaghata", karana:"Taitila", special:true },
+  "2-9": { tithi:"Shashti", tithi_end:"1:57PM", nakshatra:"Anuradha", nakshatra_end:"Full Night", yoga:"Harshana", karana:"Vanija" },
+  "2-10": { tithi:"Saptami", tithi_end:"4:24PM", nakshatra:"Anuradha", nakshatra_end:"9:35AM", yoga:"Vajra", karana:"Bava" },
+  "2-11": { tithi:"Ashtami", tithi_end:"6:49PM", nakshatra:"Jyeshtha", nakshatra_end:"12:30PM", yoga:"Siddhi", karana:"Kaulava" },
+  "2-12": { tithi:"Navami", tithi_end:"8:59PM", nakshatra:"Moola", nakshatra_end:"3:13PM", yoga:"Vyatipata", karana:"Taitila" },
+  "2-13": { tithi:"Dashami", tithi_end:"10:41PM", nakshatra:"P.Ashadha", nakshatra_end:"5:32PM", yoga:"Variyana", karana:"Vanija" },
+  "2-14": { tithi:"Ekadashi", tithi_end:"11:46PM", nakshatra:"U.Ashadha", nakshatra_end:"7:19PM", yoga:"Parigha", karana:"Bava", special:true },
+  "2-15": { tithi:"Dwadashi", tithi_end:"12:11AM(M)", nakshatra:"Shravana", nakshatra_end:"8:25PM", yoga:"Shiva", karana:"Kaulava", special:true },
+  "2-16": { tithi:"Trayodashi", tithi_end:"11:53PM", nakshatra:"Dhanishtha", nakshatra_end:"8:52PM", yoga:"Siddha", karana:"Garaja", special:true },
+  "2-17": { tithi:"Chaturdashi", tithi_end:"10:55PM", nakshatra:"Shatabhisha", nakshatra_end:"8:38PM", yoga:"Sadhya", karana:"Vishti" },
+  "2-18": { tithi:"Amavasya", tithi_end:"9:23PM", nakshatra:"P.Bhadra", nakshatra_end:"7:51PM", yoga:"Shubha", karana:"Chatushpada", special:true },
+  "2-19": { tithi:"Pratipada", tithi_end:"7:22PM", nakshatra:"U.Bhadrapada", nakshatra_end:"6:34PM", yoga:"Shukla", karana:"Kimstughna", special:true },
+  "2-20": { tithi:"Dwiteeya", tithi_end:"5:01PM", nakshatra:"Revati", nakshatra_end:"4:57PM", yoga:"Brahma", karana:"Kaulava" },
+  "2-21": { tithi:"Triteeya", tithi_end:"2:26PM", nakshatra:"Ashwini", nakshatra_end:"3:07PM", yoga:"Aindra", karana:"Garaja", special:true },
+  "2-22": { tithi:"Chaturthi", tithi_end:"11:46AM", nakshatra:"Bharani", nakshatra_end:"1:12PM", yoga:"Vishkambha", karana:"Vishti" },
+  "2-23": { tithi:"Panchami", tithi_end:"9:08AM", tithi2:"Shashthi", tithi2_end:"6:38AM(Tu)", nakshatra:"Krittika", nakshatra_end:"11:19AM", yoga:"Priti", karana:"Balava" },
+  "2-24": { tithi:"Saptami", tithi_end:"4:20AM(W)", nakshatra:"Rohini", nakshatra_end:"9:34AM", yoga:"Ayushman", karana:"Garaja" },
+  "2-25": { tithi:"Ashtami", tithi_end:"2:19AM(Th)", nakshatra:"Mrigashira", nakshatra_end:"8:03AM", nakshatra2:"Ardra", nakshatra2_end:"6:49AM(Th)", yoga:"Saubhagya", karana:"Vishti" },
+  "2-26": { tithi:"Navami", tithi_end:"12:37AM(F)", nakshatra:"Punarvasu", nakshatra_end:"5:54AM(F)", yoga:"Shobhana", karana:"Balava", special:true },
+  "2-27": { tithi:"Dashami", tithi_end:"11:16PM", nakshatra:"Pushya", nakshatra_end:"5:20AM(Sa)", yoga:"Atiganda", karana:"Taitila" },
+  "2-28": { tithi:"Ekadashi", tithi_end:"10:16PM", nakshatra:"Ashlesha", nakshatra_end:"5:07AM(Su)", yoga:"Sukarman", karana:"Vanija", special:true },
+  "2-29": { tithi:"Dwadashi", tithi_end:"9:39PM", nakshatra:"Makha", nakshatra_end:"5:17AM(M)", yoga:"Dhriti", karana:"Bava", special:true },
+  "2-30": { tithi:"Trayodashi", tithi_end:"9:26PM", nakshatra:"P.Phalguni", nakshatra_end:"5:50AM(Tu)", yoga:"Shoola", karana:"Kaulava" },
+  "2-31": { tithi:"Chaturdashi", tithi_end:"9:36PM", nakshatra:"U.Phalguni", nakshatra_end:"6:47AM(W)", yoga:"Vriddhi", karana:"Garaja" },
+  "3-1": { tithi:"Poornima", tithi_end:"10:11PM", nakshatra:"Hasta", nakshatra_end:"Full Night", yoga:"Dhruva", karana:"Vishti", special:true },
+  "3-2": { tithi:"Pratipada", tithi_end:"11:12PM", nakshatra:"Hasta", nakshatra_end:"8:08AM", yoga:"Vyaghata", karana:"Balava" },
+  "3-3": { tithi:"Dwiteeya", tithi_end:"12:39AM(Sa)", nakshatra:"Chitra", nakshatra_end:"9:54AM", yoga:"Harshana", karana:"Taitila" },
+  "3-4": { tithi:"Triteeya", tithi_end:"2:30AM(Su)", nakshatra:"Swati", nakshatra_end:"12:05PM", yoga:"Vajra", karana:"Vanija" },
+  "3-5": { tithi:"Chaturthi", tithi_end:"4:40AM(M)", nakshatra:"Vishakha", nakshatra_end:"2:37PM", yoga:"Siddhi", karana:"Bava", special:true },
+  "3-6": { tithi:"Panchami", tithi_end:"Full Night", nakshatra:"Anuradha", nakshatra_end:"5:26PM", yoga:"Vyatipata", karana:"Kaulava" },
+  "3-7": { tithi:"Panchami", tithi_end:"7:04AM", nakshatra:"Jyeshtha", nakshatra_end:"8:23PM", yoga:"Variyan", karana:"Taitila" },
+  "3-8": { tithi:"Shashthi", tithi_end:"9:31AM", nakshatra:"Moola", nakshatra_end:"11:18PM", yoga:"Variyan", karana:"Vanija" },
+  "3-9": { tithi:"Saptami", tithi_end:"11:49AM", nakshatra:"P.Ashadha", nakshatra_end:"1:57AM(F)", yoga:"Parigha", karana:"Bava" },
+  "3-10": { tithi:"Ashtami", tithi_end:"1:45PM", nakshatra:"U.Ashadha", nakshatra_end:"4:09AM(Sa)", yoga:"Shiva", karana:"Kaulava" },
+  "3-11": { tithi:"Navami", tithi_end:"3:07PM", nakshatra:"Shravana", nakshatra_end:"5:43AM(Su)", yoga:"Siddha", karana:"Garaja" },
+  "3-12": { tithi:"Dashami", tithi_end:"3:47PM", nakshatra:"Dhanishtha", nakshatra_end:"6:33AM(M)", yoga:"Sadhya", karana:"Vishti" },
+  "3-13": { tithi:"Ekadashi", tithi_end:"3:38PM", nakshatra:"Shatabhisha", nakshatra_end:"6:35AM(Tu)", yoga:"Shubha", karana:"Balava", special:true },
+  "3-14": { tithi:"Dwadashi", tithi_end:"2:42PM", nakshatra:"P.Bhadra", nakshatra_end:"5:52AM(W)", yoga:"Brahma", karana:"Taitila", special:true },
+  "3-15": { tithi:"Trayodashi", tithi_end:"1:01PM", nakshatra:"U.Bhadra", nakshatra_end:"4:28AM(Th)", yoga:"Aindra", karana:"Vanija" },
+  "3-16": { tithi:"Chaturdashi", tithi_end:"10:41AM", nakshatra:"Revati", nakshatra_end:"2:32AM(F)", yoga:"Vaidhriti", karana:"Shakuni" },
+  "3-17": { tithi:"Amavasya", tithi_end:"7:51AM", tithi2:"Pratipada", tithi2_end:"4:40AM(Sa)", nakshatra:"Ashwini", nakshatra_end:"12:12AM(Sa)", yoga:"Vishkambha", karana:"Nagava", special:true },
+  "3-18": { tithi:"Dwiteeya", tithi_end:"1:19AM(Su)", nakshatra:"Bharani", nakshatra_end:"9:39PM", yoga:"Priti", karana:"Balava", special:true },
+  "3-19": { tithi:"Triteeya", tithi_end:"9:57PM", nakshatra:"Kritika", nakshatra_end:"7:04PM", yoga:"Ayushman", karana:"Taitila" },
+  "3-20": { tithi:"Chaturthi", tithi_end:"6:45PM", nakshatra:"Rohini", nakshatra_end:"4:38PM", yoga:"Soubhagya", karana:"Vanija" },
+  "3-21": { tithi:"Panchami", tithi_end:"3:50PM", nakshatra:"Mrigashira", nakshatra_end:"2:28PM", yoga:"Atiganda", karana:"Balava" },
+  "3-22": { tithi:"Shashthi", tithi_end:"1:19PM", nakshatra:"Ardra", nakshatra_end:"12:42PM", yoga:"Sukarman", karana:"Taitila" },
+  "3-23": { tithi:"Saptami", tithi_end:"11:19AM", nakshatra:"Punarvasu", nakshatra_end:"11:27AM", yoga:"Dhriti", karana:"Vanija" },
+  "3-24": { tithi:"Ashtami", tithi_end:"9:52AM", nakshatra:"Pushya", nakshatra_end:"10:44AM", yoga:"Shoola", karana:"Bava" },
+  "3-25": { tithi:"Navami", tithi_end:"8:58AM", nakshatra:"Ashlesha", nakshatra_end:"10:34AM", yoga:"Ganda", karana:"Kaulava" },
+  "3-26": { tithi:"Dashami", tithi_end:"8:37AM", nakshatra:"Makha", nakshatra_end:"10:56AM", yoga:"Vriddhi", karana:"Garaja", special:true },
+  "3-27": { tithi:"Ekadashi", tithi_end:"8:46AM", nakshatra:"P.Phalguni", nakshatra_end:"11:48AM", yoga:"Dhruva", karana:"Vishti", special:true },
+  "3-28": { tithi:"Dwadashi", tithi_end:"9:22AM", nakshatra:"U.Phalghuni", nakshatra_end:"1:05PM", yoga:"Vyaghata", karana:"Balava", special:true },
+  "3-29": { tithi:"Trayodashi", tithi_end:"10:21AM", nakshatra:"Hasta", nakshatra_end:"2:46PM", yoga:"Harshana", karana:"Taitila" },
+  "3-30": { tithi:"Chaturdashi", tithi_end:"11:42AM", nakshatra:"Chitra", nakshatra_end:"4:46PM", yoga:"Vajra", karana:"Vanija", special:true },
+  "4-1": { tithi:"Poornima", tithi_end:"1:22PM", nakshatra:"Swati", nakshatra_end:"7:05PM", yoga:"Siddhi", karana:"Bava", special:true },
+  "4-5": { tithi:"Chaturthi", tithi_end:"4:40AM(M)", nakshatra:"Vishakha", nakshatra_end:"2:37PM", yoga:"Siddhi", karana:"Bava", special:true },
+  "4-13": { tithi:"Ekadashi", tithi_end:"3:38PM", nakshatra:"Shatabhisha", nakshatra_end:"6:35AM(Tu)", yoga:"Shubha", karana:"Balava", special:true },
+  "4-14": { tithi:"Dwadashi", tithi_end:"2:42PM", nakshatra:"P.Bhadra", nakshatra_end:"5:52AM(W)", yoga:"Brahma", karana:"Taitila", special:true },
+  "4-16": { tithi:"Amavasya", tithi_end:"4:00PM", nakshatra:"Bharani/Kritika", nakshatra_end:"", yoga:"Shobhana", karana:"Nagava", special:true },
+  "4-21": { tithi:"Panchami", tithi_end:"3:50PM", nakshatra:"Mrigashira", nakshatra_end:"2:28PM", yoga:"Atiganda", karana:"Balava", special:true },
+  "4-26": { tithi:"Ekadashi", tithi_end:"8:46AM", nakshatra:"Hasta", nakshatra_end:"8:26PM", yoga:"Siddhi", karana:"Vanija", special:true },
+  "4-30": { tithi:"Poornima", tithi_end:"4:44AM(M)", nakshatra:"Anuradha", nakshatra_end:"Full Night", yoga:"Shiva", karana:"Vishti", special:true },
+  "5-4": { tithi:"Chaturthi", tithi_end:"2:00PM", nakshatra:"U.Ashadha", nakshatra_end:"6:11PM", yoga:"Brahma", karana:"Balava", special:true },
+  "5-11": { tithi:"Ekadashi", tithi_end:"1:06PM", nakshatra:"Ashwini", nakshatra_end:"8:58PM", yoga:"Shobhana", karana:"Balava", special:true },
+  "5-14": { tithi:"Amavasya", tithi_end:"10:53PM", nakshatra:"Rohini", nakshatra_end:"12:43PM", yoga:"Shoola", karana:"Chatushpad", special:true },
+  "5-25": { tithi:"Ekadashi", tithi_end:"10:39AM", nakshatra:"Swati", nakshatra_end:"6:58AM", yoga:"Siddha", karana:"Vishti", special:true },
+  "5-29": { tithi:"Poornima", tithi_end:"7:56PM", nakshatra:"Moola", nakshatra_end:"6:33PM", yoga:"Brahma", karana:"Vishti", special:true },
+  "6-3": { tithi:"Chaturthi", tithi_end:"3:10AM(Sa)", nakshatra:"Dhanishtha", nakshatra_end:"4:13AM(Sa)", yoga:"Vishkambha", karana:"Bava", special:true },
+  "6-10": { tithi:"Ekadashi", tithi_end:"7:52PM", nakshatra:"Kritika", nakshatra_end:"1:33AM(Sa)", yoga:"Shoola", karana:"Bava", special:true },
+  "6-13": { tithi:"Amavasya", tithi_end:"5:43AM(Tu)", nakshatra:"Ardra", nakshatra_end:"5:21PM", yoga:"Dhruva", karana:"Shakuni", special:true },
+  "6-24": { tithi:"Ekadashi", tithi_end:"2:04AM(Sa)", nakshatra:"Anuradha", nakshatra_end:"7:06PM", yoga:"Shukla", karana:"Vanija", special:true },
+  "6-29": { tithi:"Poornima", tithi_end:"10:35AM", nakshatra:"Shravana", nakshatra_end:"Full Night", yoga:"Priti", karana:"Bava", special:true },
+  "7-2": { tithi:"Chaturthi", tithi_end:"1:45PM", nakshatra:"P.Bhadra", nakshatra_end:"12:06PM", yoga:"Atiganda", karana:"Balava", special:true },
+  "7-8": { tithi:"Ekadashi", tithi_end:"1:35AM(Su)", nakshatra:"Rohini", nakshatra_end:"7:20AM", yoga:"Vyaghata", karana:"Bava", special:true },
+  "7-12": { tithi:"Amavasya", tithi_end:"1:36PM", nakshatra:"Ashlesha", nakshatra_end:"8:36PM", yoga:"Variyan", karana:"Nagava", special:true },
+  "7-16": { tithi:"Chaturthi", tithi_end:"7:22AM", nakshatra:"Hasta", nakshatra_end:"6:20PM", yoga:"Sadhya", karana:"Vishti", special:true },
+  "7-21": { tithi:"Navami", tithi_end:"2:06PM", nakshatra:"Jyeshtha", nakshatra_end:"5:18AM(Sa)", yoga:"Vaidhriti", karana:"Kaulava", special:true },
+  "7-23": { tithi:"Ekadashi", tithi_end:"6:48PM", nakshatra:"Moola", nakshatra_end:"8:14AM", yoga:"Priti", karana:"Vishti", special:true },
+  "7-27": { tithi:"Poornima", tithi_end:"12:18AM(F)", nakshatra:"Dhanishtha", nakshatra_end:"4:45PM", yoga:"Atiganda", karana:"Vishti", special:true },
+  "8-4": { tithi:"Ashtami", tithi_end:"2:43PM", nakshatra:"Rohini", nakshatra_end:"1:33PM", yoga:"Vajra", karana:"Kaulava", special:true },
+  "8-7": { tithi:"Ekadashi", tithi_end:"7:34AM", nakshatra:"Punarvasu", nakshatra_end:"8:43AM", yoga:"Variyan", karana:"Balava", special:true },
+  "8-10": { tithi:"Amavasya", tithi_end:"11:26PM", nakshatra:"P.Phalguni", nakshatra_end:"3:45AM(F)", yoga:"Siddha", karana:"Chatushpad", special:true },
+  "8-14": { tithi:"Chaturthi", tithi_end:"10:14PM", nakshatra:"Swati", nakshatra_end:"5:50AM(Tu)", yoga:"Aindra", karana:"Vanija", special:true },
+  "8-22": { tithi:"Ekadashi", tithi_end:"12:13PM", nakshatra:"Shravana", nakshatra_end:"11:38PM", yoga:"Sukarman", karana:"Vishti", special:true },
+  "8-26": { tithi:"Poornima", tithi_end:"12:48PM", nakshatra:"U.Bhadra", nakshatra_end:"1:37AM(Su)", yoga:"Vriddhi", karana:"Bava", special:true },
+  "8-29": { tithi:"Chaturthi", tithi_end:"5:25AM(W)", nakshatra:"Bharani", nakshatra_end:"1:06PM", yoga:"Harshana", karana:"Vishti", special:true },
+  "9-6": { tithi:"Ekadashi", tithi_end:"3:04PM", nakshatra:"Ashlesha", nakshatra_end:"12:47PM", yoga:"Sadhya", karana:"Balava", special:true },
+  "9-10": { tithi:"Amavasya", tithi_end:"11:49AM", nakshatra:"Hasta", nakshatra_end:"12:12PM", yoga:"Aindra", karana:"Nagava", special:true },
+  "9-18": { tithi:"Ashtami", tithi_end:"1:22AM(M)", nakshatra:"U.Ashadha", nakshatra_end:"6:08AM(M)", yoga:"Sukarman", karana:"Vishti", special:true },
+  "9-20": { tithi:"Dashami", tithi_end:"4:42AM(W)", nakshatra:"Shravana", nakshatra_end:"8:31AM", yoga:"Shoola", karana:"Taitila", special:true },
+  "9-21": { tithi:"Ekadashi", tithi_end:"5:18AM(Th)", nakshatra:"Dhanishtha", nakshatra_end:"10:17AM", yoga:"Ganda", karana:"Vanija", special:true },
+  "9-25": { tithi:"Poornima", tithi_end:"12:11AM(M)", nakshatra:"Revati", nakshatra_end:"9:51AM", yoga:"Harshana", karana:"Vishti", special:true },
+  "9-29": { tithi:"Chaturthi", tithi_end:"12:40PM", nakshatra:"Mrigashira", nakshatra_end:"11:34PM", yoga:"Parigha", karana:"Balava", special:true },
+  "10-4": { tithi:"Ekadashi", tithi_end:"12:05AM(Th)", nakshatra:"P.Phalguni", nakshatra_end:"4:59PM", yoga:"Aindra", karana:"Bava", special:true },
+  "10-8": { tithi:"Amavasya", tithi_end:"2:01AM(M)", nakshatra:"Swati", nakshatra_end:"8:53PM", yoga:"Ayshman", karana:"Chatushpad", special:true },
+  "10-9": { tithi:"Pratipada", tithi_end:"3:30AM(Tu)", nakshatra:"Vishakha", nakshatra_end:"10:48PM", yoga:"Soubhagya", karana:"Kimstughna", special:true },
+  "10-20": { tithi:"Ekadashi", tithi_end:"8:01PM", nakshatra:"U.Bhadra", nakshatra_end:"8:22PM", yoga:"Vajra", karana:"Vanija", special:true },
+  "10-21": { tithi:"Dwadashi", tithi_end:"6:26PM", nakshatra:"Revati", nakshatra_end:"7:24PM", yoga:"Siddhi", karana:"Bava", special:true },
+  "10-24": { tithi:"Poornima", tithi_end:"9:53AM", nakshatra:"Kritika", nakshatra_end:"12:54PM", yoga:"Shiva", karana:"Bava", special:true },
+  "10-27": { tithi:"Chaturthi", tithi_end:"8:10PM", nakshatra:"Punarvasu", nakshatra_end:"2:19AM(Sa)", yoga:"Shubha", karana:"Bava", special:true },
+  "11-4": { tithi:"Ekadashi", tithi_end:"1:14PM", nakshatra:"Chitra", nakshatra_end:"1:18AM(Sa)", yoga:"Soubhagya", karana:"Balava", special:true },
+  "11-8": { tithi:"Amavasya", tithi_end:"7:51PM", nakshatra:"Anuradha", nakshatra_end:"7:45AM", yoga:"Dhriti", karana:"Nagava", special:true },
+  "11-15": { tithi:"Shashthi", tithi_end:"10:49AM", nakshatra:"Shatabhisha", nakshatra_end:"3:32AM(W)", yoga:"Vajra", karana:"Taitila", special:true },
+  "11-20": { tithi:"Ekadashi", tithi_end:"9:44AM", nakshatra:"Bharani", nakshatra_end:"2:38AM(M)", yoga:"Shiva", karana:"Vishti", special:true },
+  "11-21": { tithi:"Dwadashi", tithi_end:"7:06AM(M)", nakshatra:"Kritika", nakshatra_end:"12:15AM(Tu)", yoga:"Siddha", karana:"Kaulava", special:true },
+  "11-23": { tithi:"Poornima", tithi_end:"8:28PM", nakshatra:"Mrigashira", nakshatra_end:"6:22PM", yoga:"Shukla", karana:"Vishti", special:true },
+  "11-26": { tithi:"Triteeya", tithi_end:"9:35AM", nakshatra:"Pushya", nakshatra_end:"9:42AM", yoga:"Vaidhriti", karana:"Vishti", special:true },
+
+  // MAY (month 4) - missing dates
+  "4-1": { tithi:"Poornima", tithi_end:"1:22PM", nakshatra:"Swati", nakshatra_end:"7:05PM", yoga:"Siddhi", karana:"Bava" },
+  "4-2": { tithi:"Pratipada", tithi_end:"3:20PM", nakshatra:"Vishakha", nakshatra_end:"9:39PM", yoga:"Vyatipata", karana:"Kaulava" },
+  "4-3": { tithi:"Dwiteeya", tithi_end:"12:39AM(Sa)", nakshatra:"Chitra", nakshatra_end:"9:54AM", yoga:"Harshana", karana:"Taitila" },
+  "4-4": { tithi:"Triteeya", tithi_end:"2:30AM(Su)", nakshatra:"Swati", nakshatra_end:"12:05PM", yoga:"Vajra", karana:"Vanija" },
+  "4-6": { tithi:"Panchami", tithi_end:"Full Night", nakshatra:"Anuradha", nakshatra_end:"5:26PM", yoga:"Vyatipata", karana:"Kaulava" },
+  "4-7": { tithi:"Panchami", tithi_end:"7:04AM", nakshatra:"Jyeshtha", nakshatra_end:"8:23PM", yoga:"Variyan", karana:"Taitila" },
+  "4-8": { tithi:"Shashthi", tithi_end:"9:31AM", nakshatra:"Moola", nakshatra_end:"11:18PM", yoga:"Variyan", karana:"Vanija" },
+  "4-9": { tithi:"Saptami", tithi_end:"11:49AM", nakshatra:"P.Ashadha", nakshatra_end:"1:57AM(F)", yoga:"Parigha", karana:"Bava" },
+  "4-10": { tithi:"Ashtami", tithi_end:"1:45PM", nakshatra:"U.Ashadha", nakshatra_end:"4:09AM(Sa)", yoga:"Shiva", karana:"Kaulava" },
+  "4-11": { tithi:"Navami", tithi_end:"3:07PM", nakshatra:"Shravana", nakshatra_end:"5:43AM(Su)", yoga:"Siddha", karana:"Garaja" },
+  "4-12": { tithi:"Dashami", tithi_end:"3:47PM", nakshatra:"Dhanishtha", nakshatra_end:"6:33AM(M)", yoga:"Sadhya", karana:"Vishti" },
+  "4-15": { tithi:"Trayodashi", tithi_end:"1:01PM", nakshatra:"U.Bhadra", nakshatra_end:"4:28AM(Th)", yoga:"Aindra", karana:"Vanija" },
+  "4-16": { tithi:"Chaturdashi", tithi_end:"10:41AM", nakshatra:"Revati", nakshatra_end:"2:32AM(F)", yoga:"Vaidhriti", karana:"Shakuni" },
+  "4-17": { tithi:"Amavasya", tithi_end:"7:51AM", nakshatra:"Ashwini", nakshatra_end:"12:12AM(Sa)", yoga:"Vishkambha", karana:"Nagava" },
+  "4-18": { tithi:"Dwiteeya", tithi_end:"1:19AM(Su)", nakshatra:"Bharani", nakshatra_end:"9:39PM", yoga:"Priti", karana:"Balava" },
+  "4-19": { tithi:"Triteeya", tithi_end:"9:57PM", nakshatra:"Kritika", nakshatra_end:"7:04PM", yoga:"Ayushman", karana:"Taitila" },
+  "4-20": { tithi:"Chaturthi", tithi_end:"6:45PM", nakshatra:"Rohini", nakshatra_end:"4:38PM", yoga:"Soubhagya", karana:"Vanija" },
+  "4-21": { tithi:"Panchami", tithi_end:"3:50PM", nakshatra:"Mrigashira", nakshatra_end:"2:28PM", yoga:"Atiganda", karana:"Balava" },
+  "4-22": { tithi:"Shashthi", tithi_end:"1:19PM", nakshatra:"Ardra", nakshatra_end:"12:42PM", yoga:"Sukarman", karana:"Taitila" },
+  "4-23": { tithi:"Saptami", tithi_end:"11:19AM", nakshatra:"Punarvasu", nakshatra_end:"11:27AM", yoga:"Dhriti", karana:"Vanija" },
+  "4-24": { tithi:"Ashtami", tithi_end:"9:52AM", nakshatra:"Pushya", nakshatra_end:"10:44AM", yoga:"Shoola", karana:"Bava" },
+  "4-25": { tithi:"Navami", tithi_end:"8:58AM", nakshatra:"Ashlesha", nakshatra_end:"10:34AM", yoga:"Ganda", karana:"Kaulava" },
+  "4-27": { tithi:"Ekadashi", tithi_end:"8:46AM", nakshatra:"P.Phalguni", nakshatra_end:"11:48AM", yoga:"Dhruva", karana:"Vishti" },
+  "4-28": { tithi:"Dwadashi", tithi_end:"9:22AM", nakshatra:"U.Phalguni", nakshatra_end:"1:05PM", yoga:"Vyaghata", karana:"Balava" },
+  "4-29": { tithi:"Trayodashi", tithi_end:"10:21AM", nakshatra:"Hasta", nakshatra_end:"2:46PM", yoga:"Harshana", karana:"Taitila" },
+  "4-30": { tithi:"Chaturdashi", tithi_end:"11:42AM", nakshatra:"Chitra", nakshatra_end:"4:46PM", yoga:"Vajra", karana:"Vanija" },
+  "4-31": { tithi:"Pratipada", tithi_end:"Full Night", nakshatra:"Anuradha", nakshatra_end:"6:41AM", yoga:"Siddha", karana:"Balava" },
+
+  // JUNE (month 5) - missing dates
+  "5-1": { tithi:"Pratipada", tithi_end:"7:07AM", nakshatra:"Jyeshtha", nakshatra_end:"9:38AM", yoga:"Sadhya", karana:"Kaulava" },
+  "5-2": { tithi:"Dwiteeya", tithi_end:"9:31AM", nakshatra:"Moola", nakshatra_end:"12:36PM", yoga:"Shubha", karana:"Garaja" },
+  "5-3": { tithi:"Triteeya", tithi_end:"11:51AM", nakshatra:"P.Ashadha", nakshatra_end:"3:29PM", yoga:"Shukla", karana:"Vishti" },
+  "5-5": { tithi:"Panchami", tithi_end:"3:50PM", nakshatra:"Shravana", nakshatra_end:"8:33PM", yoga:"Aindra", karana:"Taitila" },
+  "5-6": { tithi:"Shashthi", tithi_end:"5:11PM", nakshatra:"Dhanishtha", nakshatra_end:"10:25PM", yoga:"Vaidhriti", karana:"Vanija" },
+  "5-7": { tithi:"Saptami", tithi_end:"5:54PM", nakshatra:"Shatabhisha", nakshatra_end:"11:39PM", yoga:"Vishkambha", karana:"Bava" },
+  "5-8": { tithi:"Ashtami", tithi_end:"5:53PM", nakshatra:"P.Bhadra", nakshatra_end:"12:09AM(Tu)", yoga:"Priti", karana:"Balava" },
+  "5-9": { tithi:"Navami", tithi_end:"5:05PM", nakshatra:"U.Bhadra", nakshatra_end:"11:51PM", yoga:"Ayushman", karana:"Garaja" },
+  "5-10": { tithi:"Dashami", tithi_end:"3:28PM", nakshatra:"Revati", nakshatra_end:"10:46PM", yoga:"Soubhagya", karana:"Vishti" },
+  "5-12": { tithi:"Dwadashi", tithi_end:"10:06AM", nakshatra:"Bharani", nakshatra_end:"6:35PM", yoga:"Atiganda", karana:"Taitila" },
+  "5-13": { tithi:"Trayodashi", tithi_end:"6:37AM", tithi2:"Chaturdashi", tithi2_end:"2:49AM(Su)", nakshatra:"Kritika", nakshatra_end:"3:46PM", yoga:"Sukarman", karana:"Vanija" },
+  "5-15": { tithi:"Chaturdashi", tithi_end:"7:41PM", nakshatra:"Ashwini", nakshatra_end:"10:44AM", yoga:"Soubhagya", karana:"Vishti" },
+  "5-16": { tithi:"Amavasya", tithi_end:"4:00PM", nakshatra:"Bharani", nakshatra_end:"8:00AM", yoga:"Shobhana", karana:"Nagava" },
+  "5-17": { tithi:"Pratipada", tithi_end:"12:11PM", nakshatra:"Rohini", nakshatra_end:"2:01AM(M)", yoga:"Atiganda", karana:"Bava" },
+  "5-18": { tithi:"Dwiteeya", tithi_end:"8:23AM", tithi2:"Triteeya", tithi2_end:"4:48AM", nakshatra:"Mrigashira", nakshatra_end:"11:11PM", yoga:"Sukarman", karana:"Kaulava" },
+  "5-19": { tithi:"Chaturthi", tithi_end:"1:37AM(W)", nakshatra:"Ardra", nakshatra_end:"8:41PM", yoga:"Dhriti", karana:"Vanija" },
+  "5-20": { tithi:"Panchami", tithi_end:"10:56PM", nakshatra:"Punarvasu", nakshatra_end:"6:41PM", yoga:"Ganda", karana:"Bava" },
+  "5-21": { tithi:"Shashthi", tithi_end:"8:54PM", nakshatra:"Pushya", nakshatra_end:"5:19PM", yoga:"Vriddhi", karana:"Kaulava" },
+  "5-22": { tithi:"Saptami", tithi_end:"7:34PM", nakshatra:"Ashlesha", nakshatra_end:"4:37PM", yoga:"Dhruva", karana:"Garaja" },
+  "5-23": { tithi:"Ashtami", tithi_end:"6:57PM", nakshatra:"Makha", nakshatra_end:"4:39PM", yoga:"Vyaghata", karana:"Vishti" },
+  "5-24": { tithi:"Navami", tithi_end:"7:01PM", nakshatra:"P.Phalguni", nakshatra_end:"5:20PM", yoga:"Harshana", karana:"Balava" },
+  "5-25": { tithi:"Dashami", tithi_end:"7:41PM", nakshatra:"U.Phalguni", nakshatra_end:"6:38PM", yoga:"Vajra", karana:"Taitila" },
+  "5-26": { tithi:"Ekadashi", tithi_end:"8:52PM", nakshatra:"Hasta", nakshatra_end:"8:26PM", yoga:"Siddhi", karana:"Vanija" },
+  "5-27": { tithi:"Dwadashi", tithi_end:"10:27PM", nakshatra:"Chitra", nakshatra_end:"10:38PM", yoga:"Vyatipata", karana:"Bava" },
+  "5-28": { tithi:"Trayodashi", tithi_end:"12:20AM(F)", nakshatra:"Swati", nakshatra_end:"1:07AM(F)", yoga:"Variyana", karana:"Kaulava" },
+  "5-29": { tithi:"Chaturdashi", tithi_end:"2:28AM(Sa)", nakshatra:"Vishakha", nakshatra_end:"3:50AM(Sa)", yoga:"Parigha", karana:"Garaja" },
+  "5-30": { tithi:"Poornima", tithi_end:"4:44AM(M)", nakshatra:"Anuradha", nakshatra_end:"Full Night", yoga:"Shiva", karana:"Vishti" },
+
+  // JULY (month 6) - missing dates
+  "6-1": { tithi:"Dwiteeya", tithi_end:"12:09AM(Th)", nakshatra:"U.Ashadha", nakshatra_end:"11:57PM", yoga:"Aindra", karana:"Taitila" },
+  "6-2": { tithi:"Triteeya", tithi_end:"1:50AM(F)", nakshatra:"Shravana", nakshatra_end:"2:16AM(F)", yoga:"Vaidhruti", karana:"Vanija" },
+  "6-4": { tithi:"Panchami", tithi_end:"4:01AM(Su)", nakshatra:"Shatabhisha", nakshatra_end:"5:42AM(Su)", yoga:"Priti", karana:"Kaulava" },
+  "6-5": { tithi:"Shashthi", tithi_end:"4:17AM(M)", nakshatra:"P.Bhadra", nakshatra_end:"Full Night", yoga:"Ayushman", karana:"Garaja" },
+  "6-6": { tithi:"Saptami", tithi_end:"3:55AM(Tu)", nakshatra:"P.Bhadra", nakshatra_end:"6:37AM", yoga:"Soubhagya", karana:"Vishti" },
+  "6-7": { tithi:"Ashtami", tithi_end:"2:51AM(W)", nakshatra:"U.Bhadra", nakshatra_end:"6:54AM", yoga:"Atiganda", karana:"Balava" },
+  "6-8": { tithi:"Navami", tithi_end:"1:08AM(Th)", nakshatra:"Revati", nakshatra_end:"6:30AM", yoga:"Sukarman", karana:"Taitila" },
+  "6-9": { tithi:"Dashami", tithi_end:"10:46PM", nakshatra:"Bharani", nakshatra_end:"3:45AM(F)", yoga:"Dhruti", karana:"Vanija" },
+  "6-11": { tithi:"Dwadashi", tithi_end:"4:34PM", nakshatra:"Rohini", nakshatra_end:"10:58PM", yoga:"Ganda", karana:"Kaulava" },
+  "6-12": { tithi:"Trayodashi", tithi_end:"1:00PM", nakshatra:"Mrigashira", nakshatra_end:"8:11PM", yoga:"Vriddhi", karana:"Vanija" },
+  "6-14": { tithi:"Pratipada", tithi_end:"2:21AM(W)", nakshatra:"Punarvasu", nakshatra_end:"2:39PM", yoga:"Harshana", karana:"Kimstughna" },
+  "6-15": { tithi:"Dwiteeya", tithi_end:"11:23PM", nakshatra:"Pushya", nakshatra_end:"12:16PM", yoga:"Vajra", karana:"Balava" },
+  "6-16": { tithi:"Triteeya", tithi_end:"8:58PM", nakshatra:"Ashlesha", nakshatra_end:"10:21AM", yoga:"Siddhi", karana:"Taitila" },
+  "6-17": { tithi:"Chaturthi", tithi_end:"7:12PM", nakshatra:"Makha", nakshatra_end:"9:04AM", yoga:"Vyatipata", karana:"Vanija" },
+  "6-18": { tithi:"Panchami", tithi_end:"6:12PM", nakshatra:"P.Phalguni", nakshatra_end:"8:30AM", yoga:"Variyan", karana:"Bava" },
+  "6-19": { tithi:"Shashthi", tithi_end:"6:00PM", nakshatra:"U.Phalguni", nakshatra_end:"8:41AM", yoga:"Parigha", karana:"Taitila" },
+  "6-20": { tithi:"Saptami", tithi_end:"6:33PM", nakshatra:"Hasta", nakshatra_end:"9:39AM", yoga:"Shiva", karana:"Vanija" },
+  "6-21": { tithi:"Ashtami", tithi_end:"7:46PM", nakshatra:"Chitra", nakshatra_end:"11:18AM", yoga:"Siddha", karana:"Vishti" },
+  "6-22": { tithi:"Navami", tithi_end:"9:13PM", nakshatra:"Swati", nakshatra_end:"1:33PM", yoga:"Sadhya", karana:"Balava" },
+  "6-23": { tithi:"Dashami", tithi_end:"11:43PM", nakshatra:"Vishakha", nakshatra_end:"4:12PM", yoga:"Shubha", karana:"Taitila" },
+  "6-25": { tithi:"Dwadashi", tithi_end:"4:28AM(Su)", nakshatra:"Jyeshtha", nakshatra_end:"10:04PM", yoga:"Brahma", karana:"Bava" },
+  "6-26": { tithi:"Trayodashi", tithi_end:"Full Night", nakshatra:"Moola", nakshatra_end:"12:58AM(Tu)", yoga:"Aindra", karana:"Kaulava" },
+  "6-27": { tithi:"Trayodashi", tithi_end:"6:45AM", nakshatra:"P.Ashadha", nakshatra_end:"3:40AM(Tu)", yoga:"Vaidhruti", karana:"Taitila" },
+  "6-28": { tithi:"Chaturdashi", tithi_end:"8:49AM", nakshatra:"U.Ashadha", nakshatra_end:"6:06AM(W)", yoga:"Vishkambha", karana:"Vanija" },
+  "6-30": { tithi:"Pratipada", tithi_end:"12:00PM", nakshatra:"Shravana", nakshatra_end:"8:13AM", yoga:"Ayushman", karana:"Kaulava" },
+  "6-31": { tithi:"Dwiteeya", tithi_end:"1:01PM", nakshatra:"Dhanishtha", nakshatra_end:"9:56AM", yoga:"Soubhagya", karana:"Garaja" },
+
+  // AUGUST (month 7) - missing dates
+  "7-1": { tithi:"Triteeya", tithi_end:"1:37PM", nakshatra:"Shatabhisha", nakshatra_end:"11:15AM", yoga:"Shobhana", karana:"Vishti" },
+  "7-3": { tithi:"Panchami", tithi_end:"1:24PM", nakshatra:"U.Bhadra", nakshatra_end:"12:30PM", yoga:"Sukarman", karana:"Taitila" },
+  "7-4": { tithi:"Shashthi", tithi_end:"12:33PM", nakshatra:"Revati", nakshatra_end:"12:33PM", yoga:"Dhriti", karana:"Vanija" },
+  "7-5": { tithi:"Saptami", tithi_end:"11:12AM", nakshatra:"Ashwini", nakshatra_end:"11:47AM", yoga:"Shoola", karana:"Bava" },
+  "7-6": { tithi:"Ashtami", tithi_end:"9:22AM", nakshatra:"Bharani", nakshatra_end:"10:43AM", yoga:"Vriddhi", karana:"Kaulava" },
+  "7-7": { tithi:"Navami", tithi_end:"7:07AM", tithi2:"Dashami", tithi2_end:"12:29AM(Sa)", nakshatra:"Kritika", nakshatra_end:"9:12AM", yoga:"Dhruva", karana:"Garaja" },
+  "7-9": { tithi:"Dwadashi", tithi_end:"10:31PM", nakshatra:"Ardra", nakshatra_end:"2:56AM(M)", yoga:"Harshana", karana:"Kaulava" },
+  "7-10": { tithi:"Trayodashi", tithi_end:"7:24PM", nakshatra:"Punarvasu", nakshatra_end:"12:39AM(Tu)", yoga:"Vajra", karana:"Garaja" },
+  "7-11": { tithi:"Chaturdashi", tithi_end:"4:23PM", nakshatra:"Pushya", nakshatra_end:"10:29PM", yoga:"Siddhi", karana:"Shakuni" },
+  "7-13": { tithi:"Pratipada", tithi_end:"11:11AM", nakshatra:"Makha", nakshatra_end:"7:08PM", yoga:"Parigha", karana:"Bava" },
+  "7-14": { tithi:"Dwiteeya", tithi_end:"9:17AM", nakshatra:"P.Phalguni", nakshatra_end:"6:12PM", yoga:"Shiva", karana:"Kaulava" },
+  "7-15": { tithi:"Triteeya", tithi_end:"7:59AM", nakshatra:"U.Phalguni", nakshatra_end:"5:55PM", yoga:"Siddha", karana:"Garaja" },
+  "7-17": { tithi:"Panchami", tithi_end:"7:30AM", nakshatra:"Chitra", nakshatra_end:"7:28PM", yoga:"Shubha", karana:"Balava" },
+  "7-18": { tithi:"Shashthi", tithi_end:"8:20AM", nakshatra:"Swati", nakshatra_end:"9:16PM", yoga:"Shukla", karana:"Taitila" },
+  "7-19": { tithi:"Saptami", tithi_end:"9:49AM", nakshatra:"Vishakha", nakshatra_end:"11:37PM", yoga:"Brahma", karana:"Vanija" },
+  "7-20": { tithi:"Ashtami", tithi_end:"11:48AM", nakshatra:"Anuradha", nakshatra_end:"2:22AM(F)", yoga:"Aindra", karana:"Bava" },
+  "7-22": { tithi:"Dashami", tithi_end:"4:30PM", nakshatra:"Moola", nakshatra_end:"Full Night", yoga:"Vishkambha", karana:"Garaja" },
+  "7-24": { tithi:"Dwadashi", tithi_end:"8:51PM", nakshatra:"P.Ashadha", nakshatra_end:"10:57AM", yoga:"Ayushman", karana:"Bava" },
+  "7-25": { tithi:"Trayodashi", tithi_end:"10:29PM", nakshatra:"U.Ashadha", nakshatra_end:"1:20PM", yoga:"Soubhagya", karana:"Kaulava" },
+  "7-26": { tithi:"Chaturdashi", tithi_end:"11:39PM", nakshatra:"Shravana", nakshatra_end:"3:17PM", yoga:"Shobhana", karana:"Garaja" },
+  "7-28": { tithi:"Pratipada", tithi_end:"12:27AM(Sa)", nakshatra:"Shatabhisha", nakshatra_end:"5:42PM", yoga:"Sukarman", karana:"Balava" },
+  "7-29": { tithi:"Dwiteeya", tithi_end:"12:07AM(Su)", nakshatra:"P.Bhadra", nakshatra_end:"6:11PM", yoga:"Dhriti", karana:"Taitila" },
+  "7-30": { tithi:"Triteeya", tithi_end:"11:11PM", nakshatra:"U.Bhadra", nakshatra_end:"6:14PM", yoga:"Vanija", karana:"Vishti" },
+  "7-31": { tithi:"Chaturthi", tithi_end:"10:12PM", nakshatra:"Revati", nakshatra_end:"5:53PM", yoga:"Ganda", karana:"Bava" },
+
+  // SEPTEMBER (month 8) - missing dates
+  "8-1": { tithi:"Panchami", tithi_end:"8:42PM", nakshatra:"Ashwini", nakshatra_end:"5:11PM", yoga:"Vriddhi", karana:"Kaulava" },
+  "8-2": { tithi:"Shashthi", tithi_end:"6:56PM", nakshatra:"Bharani", nakshatra_end:"4:12PM", yoga:"Dhruva", karana:"Garaja" },
+  "8-3": { tithi:"Saptami", tithi_end:"4:55PM", nakshatra:"Kritika", nakshatra_end:"2:59PM", yoga:"Vyaghata", karana:"Bava" },
+  "8-4": { tithi:"Ashtami", tithi_end:"2:43PM", nakshatra:"Rohini", nakshatra_end:"1:33PM", yoga:"Vajra", karana:"Kaulava" },
+  "8-5": { tithi:"Navami", tithi_end:"12:23PM", nakshatra:"Mrigashira", nakshatra_end:"12:00PM", yoga:"Siddhi", karana:"Garaja" },
+  "8-6": { tithi:"Dashami", tithi_end:"9:59AM", nakshatra:"Ardra", nakshatra_end:"10:22AM", yoga:"Vyatipata", karana:"Vishti" },
+  "8-8": { tithi:"Trayodashi", tithi_end:"3:01AM(W)", nakshatra:"Pushya", nakshatra_end:"7:09AM", yoga:"Parigha", karana:"Garaja" },
+  "8-9": { tithi:"Chaturdashi", tithi_end:"1:03AM(Th)", nakshatra:"Makha", nakshatra_end:"4:34AM(Th)", yoga:"Shiva", karana:"Vishti" },
+  "8-11": { tithi:"Pratipada", tithi_end:"10:16PM", nakshatra:"U.Phalguni", nakshatra_end:"3:24AM(Sa)", yoga:"Sadhya", karana:"Kimstughna" },
+  "8-12": { tithi:"Dwiteeya", tithi_end:"9:38PM", nakshatra:"Hasta", nakshatra_end:"3:36AM(Su)", yoga:"Shukla", karana:"Balava" },
+  "8-13": { tithi:"Triteeya", tithi_end:"9:37PM", nakshatra:"Chitra", nakshatra_end:"4:24AM(M)", yoga:"Brahma", karana:"Taitila" },
+  "8-15": { tithi:"Panchami", tithi_end:"11:29PM", nakshatra:"Vishakha", nakshatra_end:"Full Night", yoga:"Vaidhriti", karana:"Bava" },
+  "8-16": { tithi:"Shashthi", tithi_end:"1:18AM(Th)", nakshatra:"Vishakha", nakshatra_end:"7:52AM", yoga:"Vishkambha", karana:"Kaulava" },
+  "8-17": { tithi:"Saptami", tithi_end:"3:31AM(F)", nakshatra:"Anuradha", nakshatra_end:"10:23AM", yoga:"Priti", karana:"Garaja" },
+  "8-18": { tithi:"Ashtami", tithi_end:"5:57AM(Sa)", nakshatra:"Jyeshtha", nakshatra_end:"1:14PM", yoga:"Ayushman", karana:"Vishti" },
+  "8-19": { tithi:"Navami", tithi_end:"Full Night", nakshatra:"Moola", nakshatra_end:"4:12PM", yoga:"Soubhagya", karana:"Balava" },
+  "8-20": { tithi:"Dashami", tithi_end:"10:31AM", nakshatra:"U.Ashadha", nakshatra_end:"9:36PM", yoga:"Atiganda", karana:"Garaja" },
+  "8-21": { tithi:"Ekadashi", tithi_end:"12:13PM", nakshatra:"Shravana", nakshatra_end:"11:38PM", yoga:"Sukarman", karana:"Vishti" },
+  "8-23": { tithi:"Dwadashi", tithi_end:"1:20PM", nakshatra:"Dhanishtha", nakshatra_end:"1:04AM(Th)", yoga:"Dhriti", karana:"Balava" },
+  "8-24": { tithi:"Trayodashi", tithi_end:"1:48PM", nakshatra:"Shatabhisha", nakshatra_end:"1:52AM(F)", yoga:"Shoola", karana:"Taitila" },
+  "8-25": { tithi:"Chaturdashi", tithi_end:"1:37PM", nakshatra:"P.Bhadra", nakshatra_end:"2:01AM(Sa)", yoga:"Ganda", karana:"Vanija" },
+  "8-27": { tithi:"Pratipada", tithi_end:"11:38AM", nakshatra:"Revati", nakshatra_end:"12:46AM(M)", yoga:"Dhruva", karana:"Kaulava" },
+  "8-28": { tithi:"Dwiteeya", tithi_end:"9:43AM", nakshatra:"Ashwini", nakshatra_end:"11:33PM", yoga:"Vyaghata", karana:"Garaja" },
+  "8-29": { tithi:"Chaturthi", tithi_end:"5:25AM(W)", nakshatra:"Bharani", nakshatra_end:"1:06PM", yoga:"Harshana", karana:"Vishti" },
+  "8-30": { tithi:"Panchami", tithi_end:"3:05AM(Th)", nakshatra:"Kritika", nakshatra_end:"8:30PM", yoga:"Vajra", karana:"Kaulava" },
+
+  // OCTOBER (month 9) - missing dates
+  "9-1": { tithi:"Shashthi", tithi_end:"12:45AM(F)", nakshatra:"Rohini", nakshatra_end:"6:56PM", yoga:"Siddhi", karana:"Garaja" },
+  "9-2": { tithi:"Saptami", tithi_end:"10:29PM", nakshatra:"Mrigashira", nakshatra_end:"5:24PM", yoga:"Vyatipata", karana:"Vishti" },
+  "9-3": { tithi:"Ashtami", tithi_end:"8:21PM", nakshatra:"Ardra", nakshatra_end:"3:59PM", yoga:"Parigha", karana:"Balava" },
+  "9-4": { tithi:"Navami", tithi_end:"6:24PM", nakshatra:"Punarvasu", nakshatra_end:"2:43PM", yoga:"Shiva", karana:"Taitila" },
+  "9-5": { tithi:"Dashami", tithi_end:"4:37PM", nakshatra:"Pushya", nakshatra_end:"1:38PM", yoga:"Siddha", karana:"Vishti" },
+  "9-7": { tithi:"Dwadashi", tithi_end:"1:46PM", nakshatra:"Makha", nakshatra_end:"12:10PM", yoga:"Shubha", karana:"Taitila" },
+  "9-8": { tithi:"Trayodashi", tithi_end:"12:46PM", nakshatra:"P.Phalguni", nakshatra_end:"11:49AM", yoga:"Shukla", karana:"Vanija" },
+  "9-9": { tithi:"Chaturdashi", tithi_end:"12:06PM", nakshatra:"U.Phalguni", nakshatra_end:"11:49AM", yoga:"Brahma", karana:"Shakuni" },
+  "9-11": { tithi:"Pratipada", tithi_end:"12:01PM", nakshatra:"Chitra", nakshatra_end:"1:02PM", yoga:"Vaidhriti", karana:"Bava" },
+  "9-12": { tithi:"Dwiteeya", tithi_end:"12:43PM", nakshatra:"Swati", nakshatra_end:"2:21PM", yoga:"Vishkambha", karana:"Kaulava" },
+  "9-13": { tithi:"Triteeya", tithi_end:"1:57PM", nakshatra:"Vishakha", nakshatra_end:"4:12PM", yoga:"Priti", karana:"Garaja" },
+  "9-14": { tithi:"Chaturthi", tithi_end:"3:43PM", nakshatra:"Anuradha", nakshatra_end:"6:32PM", yoga:"Ayushman", karana:"Vishti" },
+  "9-15": { tithi:"Panchami", tithi_end:"5:55PM", nakshatra:"Jyeshtha", nakshatra_end:"9:17PM", yoga:"Soubhagya", karana:"Balava" },
+  "9-16": { tithi:"Shashthi", tithi_end:"8:24PM", nakshatra:"Mula", nakshatra_end:"12:16AM(Sa)", yoga:"Shobhana", karana:"Taitila" },
+  "9-17": { tithi:"Saptami", tithi_end:"10:58PM", nakshatra:"P.Ashadha", nakshatra_end:"3:18AM(Su)", yoga:"Atiganda", karana:"Garaja" },
+  "9-19": { tithi:"Navami", tithi_end:"3:20AM(Tu)", nakshatra:"Shravana", nakshatra_end:"Full Night", yoga:"Dhriti", karana:"Balava" },
+  "9-22": { tithi:"Dwadashi", tithi_end:"5:06AM(F)", nakshatra:"Shatabhisha", nakshatra_end:"11:18", yoga:"Vriddhi", karana:"Bava" },
+  "9-23": { tithi:"Trayodashi", tithi_end:"4:07AM(Sa)", nakshatra:"P.Bhadra", nakshatra_end:"11:32AM", yoga:"Dhruva", karana:"Kaulava" },
+  "9-24": { tithi:"Chaturdashi", tithi_end:"2:26AM(Su)", nakshatra:"U.Bhadra", nakshatra_end:"11:01AM", yoga:"Vyaghata", karana:"Garaja" },
+  "9-26": { tithi:"Pratipada", tithi_end:"9:31PM", nakshatra:"Ashwini", nakshatra_end:"8:11AM", yoga:"Siddhi", karana:"Balava" },
+  "9-27": { tithi:"Dwiteeya", tithi_end:"6:37PM", nakshatra:"Kritika", nakshatra_end:"3:55AM(W)", yoga:"Vyatipata", karana:"Taitila" },
+  "9-28": { tithi:"Triteeya", tithi_end:"3:36PM", nakshatra:"Rohini", nakshatra_end:"1:41AM(Th)", yoga:"Variyan", karana:"Vishti" },
+  "9-30": { tithi:"Panchami", tithi_end:"9:55AM", tithi2:"Shashthi", tithi2_end:"7:27AM(Sa)", nakshatra:"Ardra", nakshatra_end:"9:41PM", yoga:"Shiva", karana:"Taitila" },
+  "9-31": { tithi:"Saptami", tithi_end:"4:21AM(Su)", nakshatra:"Punarvasu", nakshatra_end:"8:09PM", yoga:"Siddha", karana:"Vishti" },
+
+  // NOVEMBER (month 10) - missing dates
+  "10-1": { tithi:"Ashtami", tithi_end:"2:40AM(M)", nakshatra:"Pushya", nakshatra_end:"6:00PM", yoga:"Shubha", karana:"Balava" },
+  "10-2": { tithi:"Navami", tithi_end:"1:24AM(Tu)", nakshatra:"Ashlesha", nakshatra_end:"5:16PM", yoga:"Shukla", karana:"Taitila" },
+  "10-3": { tithi:"Dashami", tithi_end:"12:33AM(W)", nakshatra:"Makha", nakshatra_end:"4:56PM", yoga:"Brahma", karana:"Vanija" },
+  "10-5": { tithi:"Dwadashi", tithi_end:"12:00AM(F)", nakshatra:"U.Phalguni", nakshatra_end:"5:25PM", yoga:"Vaidhriti", karana:"Kaulava" },
+  "10-6": { tithi:"Trayodashi", tithi_end:"12:18AM(Sa)", nakshatra:"Hasta", nakshatra_end:"6:13PM", yoga:"Vishkambha", karana:"Garaja" },
+  "10-7": { tithi:"Chaturdashi", tithi_end:"12:58AM(Su)", nakshatra:"Chitra", nakshatra_end:"7:22PM", yoga:"Priti", karana:"Vishti" },
+  "10-10": { tithi:"Dwiteeya", tithi_end:"5:23AM(W)", nakshatra:"Anuradha", nakshatra_end:"1:07AM(W)", yoga:"Shobhana", karana:"Balava" },
+  "10-11": { tithi:"Triteeya", tithi_end:"Full Night", nakshatra:"Jyeshtha", nakshatra_end:"3:48AM(Th)", yoga:"Atiganda", karana:"Taitila" },
+  "10-12": { tithi:"Triteeya", tithi_end:"7:39AM", nakshatra:"Moola", nakshatra_end:"6:46AM(F)", yoga:"Sukarman", karana:"Garaja" },
+  "10-13": { tithi:"Chaturthi", tithi_end:"10:12AM", nakshatra:"P.Ashadha", nakshatra_end:"Full Night", yoga:"Dhriti", karana:"Vishti" },
+  "10-14": { tithi:"Panchami", tithi_end:"12:54PM", nakshatra:"P.Ashadha", nakshatra_end:"9:54AM", yoga:"Shoola", karana:"Balava" },
+  "10-15": { tithi:"Shashthi", tithi_end:"3:31PM", nakshatra:"U.Ashadha", nakshatra_end:"12:58PM", yoga:"Ganda", karana:"Taitila" },
+  "10-16": { tithi:"Saptami", tithi_end:"5:49PM", nakshatra:"Shravana", nakshatra_end:"3:46PM", yoga:"Vriddhi", karana:"Vanija" },
+  "10-17": { tithi:"Ashtami", tithi_end:"7:35PM", nakshatra:"Dhanishtha", nakshatra_end:"6:04PM", yoga:"Dhruva", karana:"Bava" },
+  "10-18": { tithi:"Navami", tithi_end:"8:36PM", nakshatra:"Shatabhisha", nakshatra_end:"7:40PM", yoga:"Vyaghta", karana:"Balava" },
+  "10-19": { tithi:"Dashami", tithi_end:"8:45PM", nakshatra:"P.Bhadra", nakshatra_end:"8:26PM", yoga:"Harshana", karana:"Taitila" },
+  "10-22": { tithi:"Trayodashi", tithi_end:"4:07PM", nakshatra:"Ashwini", nakshatra_end:"5:45PM", yoga:"Vyatipata", karana:"Taitila" },
+  "10-23": { tithi:"Chaturdashi", tithi_end:"1:12PM", nakshatra:"Bharani", nakshatra_end:"3:31PM", yoga:"Variyan", karana:"Vanija" },
+  "10-25": { tithi:"Dwiteeya", tithi_end:"2:45PM", nakshatra:"Rohini", nakshatra_end:"10:05AM", yoga:"Siddha", karana:"Taitila" },
+  "10-26": { tithi:"Triteeya", tithi_end:"11:18PM", nakshatra:"Mrigashira", nakshatra_end:"7:16AM", yoga:"Sadhya", karana:"Vanija" },
+  "10-28": { tithi:"Panchami", tithi_end:"5:27PM", nakshatra:"Pushya", nakshatra_end:"12:59AM(Su)", yoga:"Shukla", karana:"Taitila" },
+  "10-29": { tithi:"Shashthi", tithi_end:"3:16PM", nakshatra:"Ashlesha", nakshatra_end:"11:12PM", yoga:"Aindra", karana:"Vanija" },
+  "10-30": { tithi:"Saptami", tithi_end:"1:41PM", nakshatra:"Makha", nakshatra_end:"8:30PM", yoga:"Vaidhriti", karana:"Bava" },
+
+  // DECEMBER (month 11) - missing dates
+  "11-1": { tithi:"Ashtami", tithi_end:"12:44PM", nakshatra:"P.Phalguni", nakshatra_end:"10:24PM", yoga:"Vishkambha", karana:"Kaulava" },
+  "11-2": { tithi:"Navami", tithi_end:"12:22PM", nakshatra:"U.Phalguni", nakshatra_end:"10:53PM", yoga:"Priti", karana:"Garaja" },
+  "11-3": { tithi:"Dashami", tithi_end:"12:33PM", nakshatra:"Hasta", nakshatra_end:"11:52PM", yoga:"Ayushman", karana:"Vishti" },
+  "11-5": { tithi:"Dwadashi", tithi_end:"2:22PM", nakshatra:"Swati", nakshatra_end:"3:07AM(Su)", yoga:"Shobhana", karana:"Taitila" },
+  "11-6": { tithi:"Trayodashi", tithi_end:"3:52PM", nakshatra:"Vishakha", nakshatra_end:"5:17AM(M)", yoga:"Atiganda", karana:"Vanija" },
+  "11-7": { tithi:"Chaturdashi", tithi_end:"5:42PM", nakshatra:"Anuradha", nakshatra_end:"Full Night", yoga:"Sukarman", karana:"Shakuni" },
+  "11-9": { tithi:"Pratipada", tithi_end:"10:16PM", nakshatra:"Jyeshtha", nakshatra_end:"10:30AM", yoga:"Shoola", karana:"Kimstughna" },
+  "11-10": { tithi:"Dwiteeya", tithi_end:"12:53AM(F)", nakshatra:"Moola", nakshatra_end:"1:27PM", yoga:"Ganda", karana:"Balava" },
+  "11-11": { tithi:"Triteeya", tithi_end:"3:36AM(Sa)", nakshatra:"P.Ashadha", nakshatra_end:"4:34PM", yoga:"Vriddhi", karana:"Taitila" },
+  "11-12": { tithi:"Chaturthi", tithi_end:"6:17AM(Su)", nakshatra:"U.Ashadha", nakshatra_end:"7:41PM", yoga:"Dhruva", karana:"Vanija" },
+  "11-13": { tithi:"Panchami", tithi_end:"Full Night", nakshatra:"Shravana", nakshatra_end:"10:41PM", yoga:"Vyaghata", karana:"Bava" },
+  "11-14": { tithi:"Panchami", tithi_end:"8:46AM", nakshatra:"Dhanishtha", nakshatra_end:"1:22AM(Tu)", yoga:"Harshana", karana:"Balava" },
+  "11-16": { tithi:"Saptami", tithi_end:"12:16PM", nakshatra:"P.Bhadra", nakshatra_end:"5:00AM(Th)", yoga:"Siddhi", karana:"Vanija" },
+  "11-17": { tithi:"Ashtami", tithi_end:"12:56PM", nakshatra:"U.Bhadra", nakshatra_end:"5:39AM(F)", yoga:"Vyatipata", karana:"Bava" },
+  "11-18": { tithi:"Navami", tithi_end:"12:44PM", nakshatra:"Revati", nakshatra_end:"5:27AM(Sa)", yoga:"Variyan", karana:"Kaulava" },
+  "11-19": { tithi:"Dashami", tithi_end:"11:39AM", nakshatra:"Ashwini", nakshatra_end:"4:25AM(Su)", yoga:"Parigha", karana:"Garaja" },
+  "11-22": { tithi:"Chaturdashi", tithi_end:"12:17AM(W)", nakshatra:"Rohini", nakshatra_end:"9:26PM", yoga:"Sadhya", karana:"Garaja" },
+  "11-24": { tithi:"Pratipada", tithi_end:"4:37PM", nakshatra:"Ardra", nakshatra_end:"3:16PM", yoga:"Brahma", karana:"Kaulava" },
+  "11-25": { tithi:"Dwiteeya", tithi_end:"12:56PM", nakshatra:"Punarvasu", nakshatra_end:"12:19PM", yoga:"Aindra", karana:"Garaja" },
+  "11-27": { tithi:"Panchami", tithi_end:"4:28AM(M)", nakshatra:"Ashlesha", nakshatra_end:"7:34AM", yoga:"Vishkambha", karana:"Kaulava" },
+  "11-28": { tithi:"Shashthi", tithi_end:"2:55AM(Tu)", nakshatra:"P.Phalguni", nakshatra_end:"5:12AM(Tu)", yoga:"Ayushman", karana:"Garaja" },
+  "11-29": { tithi:"Saptami", tithi_end:"2:06AM(W)", nakshatra:"U.Phalguni", nakshatra_end:"5:06AM(W)", yoga:"Soubhagya", karana:"Vishti" },
+  "11-30": { tithi:"Ashtami", tithi_end:"2:02AM(Th)", nakshatra:"Hasta", nakshatra_end:"5:43AM(Th)", yoga:"Shobhana", karana:"Balava" },
+  "11-31": { tithi:"Navami", tithi_end:"2:40AM(F)", nakshatra:"Chitra", nakshatra_end:"6:59AM(F)", yoga:"Atiganda", karana:"Taitila" },
+};
+
+const SPECIAL_DAYS = {
+  0: [
+    {d:1, desc:"Calendar New Year"},
+    {d:2, desc:"Pausha Poornima · Sri Satyanarayana Pooja @6:00PM"},
+    {d:6, desc:"Sankashtahara Chaturthi · Ganapati Homam @10:00AM"},
+    {d:14, desc:"Makara Sankramana · Ekadashi Upavasa"},
+    {d:15, desc:"Dwadashi Paranam after SunRise @7:25AM"},
+    {d:18, desc:"Amavasya · Durga Pooja @6:00PM · Purandhara Dasara Aradhana"},
+    {d:19, desc:"Shishira Rutu · Magha masa begins"},
+    {d:25, desc:"Ratha Saptami"},
+    {d:26, desc:"Bheeshastami · Vishnu Sahasranama Parayana @7:00PM"},
+    {d:27, desc:"Madhwa Navami · Vayustuti Homam @10:00AM"},
+    {d:29, desc:"Ekadashi Upavasa"},
+    {d:30, desc:"Dwadashi Paranam after Sun Rise @7:17AM"},
+  ],
+  1: [
+    {d:1, desc:"Poornima · Sri Satyanarayana Pooja @6:00PM"},
+    {d:5, desc:"Sankashtahara Chaturthi · Ganapati Homa @10:00AM"},
+    {d:12, desc:"Kumbha Sankramana · Ekadashi"},
+    {d:13, desc:"Dwadashi HARIVASARA until 9:19AM"},
+    {d:15, desc:"Maha Shivaratri"},
+    {d:16, desc:"Amavasya · Durga Pooja @6:00PM"},
+    {d:17, desc:"Phalguna masa begins"},
+    {d:23, desc:"Sri Raghavendra Swami Vardhanti"},
+    {d:27, desc:"Ekadashi"},
+    {d:28, desc:"Dwadashi Paranam after Sun Rise @6:46AM"},
+  ],
+  2: [
+    {d:2, desc:"Holi Poornima"},
+    {d:3, desc:"Lunar Eclipse 4:50AM–6:42AM · Satyanarayana Pooja @6:00PM"},
+    {d:6, desc:"Sri Vadiraja Swami Aradhane"},
+    {d:7, desc:"Sankashtahara Ganapati Homam @10:00AM · Sri Vyasateertha Aradhane"},
+    {d:8, desc:"Daylight Saving begins"},
+    {d:14, desc:"Meena Sankramana · Ekadashi"},
+    {d:15, desc:"Shravanopavasa"},
+    {d:16, desc:"Dwadashi Paranam after Sun Rise @7:24AM"},
+    {d:18, desc:"Amavasya · Durga Pooja @6:00PM"},
+    {d:19, desc:"Chandra Yugadi – Paraabhava Samvatsara · Vasanta Rutu · Chaitra masa begins"},
+    {d:21, desc:"Matsya Jayanti"},
+    {d:26, desc:"Sri Rama Navami"},
+    {d:28, desc:"Ekadashi"},
+    {d:29, desc:"Dwadashi Paranama after Sun Rise @7:06AM"},
+  ],
+  3: [
+    {d:1, desc:"Hanumad-Jayanti · Pavamana Homam @9:00AM · Poornima Satyanarayana Pooja @6:00PM"},
+    {d:5, desc:"Sankashtahara Chaturthi · Ganapati Homa @10:00AM"},
+    {d:13, desc:"Mesha Sankramana · Ekadashi"},
+    {d:14, desc:"Soura Yugadi · Vishu · Dwadashi Paranam after Sun Rise @6:43AM"},
+    {d:17, desc:"Amavasya · Durga Pooja @6:00PM"},
+    {d:18, desc:"Vaishakha masa begins"},
+    {d:19, desc:"Akshaya Triteeya · Parashurama Jayanti"},
+    {d:26, desc:"Srinivasa Kalyana"},
+    {d:27, desc:"Ekadashi"},
+    {d:28, desc:"Dwadashi Paranam after Sun Rise @6:27AM · Sri Vedavyasa Jayanti"},
+    {d:30, desc:"Narasimha Jayanti · Manyusookta Homam @10:00AM"},
+  ],
+  4: [
+    {d:1, desc:"Vaishakha Poornima · Buddha Jayanti · Kurma Jayanti · Satyanarayana Pooja @6:00PM"},
+    {d:5, desc:"Sankashtahara Chaturthi · Ganapati Homam @10:00AM"},
+    {d:13, desc:"Ekadashi Upavasa (Dashamividdhi)"},
+    {d:14, desc:"Dwadashi Paranam @6:11AM · Vrishabha Sankramana"},
+    {d:16, desc:"Amavasya · Durga Pooja @6:00PM"},
+    {d:17, desc:"Greeshma Rutu · Jyeshtha (adhika) masa begins"},
+    {d:21, desc:"Guru Pushya Yoga"},
+    {d:26, desc:"Ekadashi Upavasa"},
+    {d:27, desc:"Dwadashi Paranam after Sun Rise @7:17AM"},
+    {d:30, desc:"Adhika Jyeshtha Poornima · Satyanarayana Pooja @6:00PM"},
+  ],
+  5: [
+    {d:4, desc:"Sankashtahara Chaturthi · Ganapati Homam @10:00AM"},
+    {d:11, desc:"Ekadashi Upavasa"},
+    {d:12, desc:"Dwadashi Paranam after Sun Rise @5:59AM"},
+    {d:14, desc:"Adhika Jyeshtha Amavasya · Durga Pooja @6:00PM"},
+    {d:15, desc:"Mithuna Sankramana · Jyeshtha (Nija) masa begins"},
+    {d:22, desc:"Dakshinayana Begins per Drik panchanga"},
+    {d:25, desc:"Ekadashi Upavasa"},
+    {d:26, desc:"Dwadashi Paranam after Sun Rise @6:02AM"},
+    {d:28, desc:"Sreepadarayara Aradhane"},
+    {d:29, desc:"Nija Jyeshtha Poornima · Satyanarayana Pooja @6:00PM"},
+  ],
+  6: [
+    {d:3, desc:"Sankashtahara Chaturthi · Ganapati Homam @10:00AM"},
+    {d:10, desc:"Ekadashi Upavasa"},
+    {d:11, desc:"Dwadashi Paranam after Sun Rise @6:09AM"},
+    {d:13, desc:"Nija Jyeshtha Amavasya · Durga Namaskara Pooja @6:00PM"},
+    {d:14, desc:"Ashadha masa begins"},
+    {d:16, desc:"Karkataka sankramana · Dakshinayana begins"},
+    {d:24, desc:"Ekadashi Upavasa · Shayani · Prathama Ekadashi"},
+    {d:25, desc:"Dwadashi Paranam @6:18AM · Chaturmasya Shakhavrata begins"},
+    {d:29, desc:"Ashadha Poornima · Guru Poornima · Satyanarayana Pooja @6:00PM"},
+  ],
+  7: [
+    {d:2, desc:"Sankashtahara Chaturthi · Ganapati Homam @10:00AM"},
+    {d:3, desc:"Teekarayara Aradhane"},
+    {d:8, desc:"Ekadashi Upavasa"},
+    {d:9, desc:"Dwadashi Paranam after Sun Rise @6:30AM"},
+    {d:12, desc:"Solar Eclipse 11:34AM–3:57PM · Ashadha Amavasya · Durga Namaskara Pooja @6:00PM"},
+    {d:13, desc:"Varsha Rutu · Shravana masa begins"},
+    {d:16, desc:"Simha sankramana · Naga Panchami · Ashlesha Bali"},
+    {d:21, desc:"Varamahalakshmi Vrata"},
+    {d:23, desc:"Ekadashi Upavasa"},
+    {d:24, desc:"Dwadashi Paranam @6:42AM · Dadhi vrata begins"},
+    {d:26, desc:"Sarva Rugupakarma · Satyanarayana Pooja @5:30PM · Yajurupakarma"},
+    {d:27, desc:"Shravana Poornima · Rakshabandha · Lunar eclipse 10:33PM–1:52AM"},
+    {d:28, desc:"Rayara Poorvaradhana"},
+    {d:29, desc:"Raghavendra Swami Aradhana Mahotsava"},
+    {d:30, desc:"Uttararadhana"},
+    {d:31, desc:"Sankashtahara Chaturthi · Ganapati Homam @10:00AM"},
+  ],
+  8: [
+    {d:4, desc:"Sri Krishna Jayanti Arghya @12:20AM"},
+    {d:5, desc:"Sri Krishna Leelotsava"},
+    {d:7, desc:"Ekadashi Upavasa"},
+    {d:8, desc:"Dwadashi Paranam after Sun Rise @6:53AM"},
+    {d:10, desc:"Shravana Amavasya · Durga Pooja @5:30PM"},
+    {d:11, desc:"Bhadrapada Masa begins"},
+    {d:13, desc:"Gouri Triteeya · Varaha Jayanti"},
+    {d:14, desc:"Ganesha Chaturthi – Ganapati Homam @10:00AM"},
+    {d:15, desc:"HH Sri SugundraTeertha Swamiji Vardhanti · Rishi Panchami"},
+    {d:16, desc:"Kanya Sankramana"},
+    {d:19, desc:"Jagannatha Dasara Aradhane"},
+    {d:22, desc:"Ekadashi Upavasa"},
+    {d:23, desc:"Dwadashi Paranam @7:05AM · Ksheera vrata begins · Vamana Jayanti"},
+    {d:25, desc:"Ananta Chaturdashi"},
+    {d:26, desc:"Bhadrapada Poornima · Satyanarayana Pooja @6:00PM"},
+    {d:27, desc:"Mahalaya Pitr paksha begins"},
+    {d:29, desc:"Sankashtahara Chaturthi · Ganapati Homam @10:00AM"},
+  ],
+  9: [
+    {d:4, desc:"Avidhava Navami"},
+    {d:6, desc:"Ekadashi Upavasa"},
+    {d:7, desc:"Dwadashi Paranam after SunRise @7:16AM"},
+    {d:10, desc:"Mahalaya Amavasya · Durga Pooja @6:00PM"},
+    {d:11, desc:"Sharad Rutu · Ashvayuja masa · Navaratri begins"},
+    {d:15, desc:"Lalita Panchami"},
+    {d:16, desc:"Pustaka Sthapana"},
+    {d:17, desc:"Tula Sankramana"},
+    {d:18, desc:"Durgashtami – Chandika Homam"},
+    {d:19, desc:"Mahanavami · Pustaka visarjana"},
+    {d:20, desc:"Vijayadashami · Madhva Jayanti · Vayustuti Homam @10:00AM"},
+    {d:21, desc:"Ekadashi Upavasa"},
+    {d:22, desc:"Dwadashi Harivasara Paranam after @10:18AM · Dwidala vrata begins"},
+    {d:25, desc:"Poornima · Satyanarayana Pooja @6:00PM"},
+    {d:29, desc:"Sankashtahara Chaturthi · Ganapati Homam @10:00AM"},
+  ],
+  10: [
+    {d:4, desc:"Ekadashi Upavasa"},
+    {d:5, desc:"Dwadashi Paranam after SunRise @6:41AM"},
+    {d:6, desc:"Dhana Trayodashi · Yamadeepa"},
+    {d:7, desc:"Naraka Chaturdashi – Tailabhyanjana @moonrise @5:07AM"},
+    {d:8, desc:"Deepavali Amavasya · Lakshmi–Durga Pooja @6:00PM"},
+    {d:9, desc:"Kartika masa begins · Balipadya Deepavali New Year · Tulasi Pooja begins"},
+    {d:16, desc:"Vrishcika Sankramana"},
+    {d:19, desc:"Vijayadasara Aradhane"},
+    {d:20, desc:"Ekadashi Upavasa"},
+    {d:21, desc:"Utthana Dwadashi · Ksherabdhi seva 6:30AM · Tulasi Kalyana @6:00PM"},
+    {d:24, desc:"Poornima · Satyanarayana Pooja @6:00PM"},
+    {d:27, desc:"Sankashtahara Chaturthi · GanaHomam @10:00AM"},
+  ],
+  11: [
+    {d:4, desc:"Ekadashi Upavasa"},
+    {d:5, desc:"Dwadashi Paranam after Sun Rise @7:10AM"},
+    {d:8, desc:"Kartika Amavasya · Durga Pooja @5:30PM"},
+    {d:9, desc:"Hemanta Rutu · Margashirsha Masa begins"},
+    {d:15, desc:"Subrahmanya Shashthi · Skanda Homam @10:00AM · Dhanu Sankramana"},
+    {d:20, desc:"Geeta Jayanti · Ekadashi Upavasa · Geeta Parayana @5:00PM"},
+    {d:21, desc:"Dwadashi Paranam after Sun Rise @7:21AM"},
+    {d:22, desc:"Uttarayana begins per Drik Panchanga"},
+    {d:23, desc:"Margashira Poornima · Satyanarayana Pooja @6:00PM"},
+    {d:26, desc:"Sankashtahara Chaturthi · Ganapati Homam @10:00AM"},
+  ],
+};
+
+const today = new Date();
+let curMonth = today.getMonth();
+let selectedDay = today.getDate();
+let selectedMonth = curMonth;
+
+const DAY_NAMES = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+const FULL_DAY_NAMES = ["Ravivasara","Somavasara","Mangalavasara","Budhavasara","Guruvasara","Shukravasara","Shanivasara"];
+
+function getDaysInMonth(m) { return new Date(2026, m + 1, 0).getDate(); }
+function getFirstDayOfMonth(m) { return new Date(2026, m, 1).getDay(); }
+
+function changeMonth(delta) {
+  curMonth = Math.max(0, Math.min(11, curMonth + delta));
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('month-title').textContent = MONTHS[curMonth];
+  const si = SAMVAT_INFO[curMonth];
+  // samvat shown in day detail tiles
+
+  const grid = document.getElementById('calendar-grid');
+  grid.innerHTML = '';
+
+  DAY_NAMES.forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'day-header';
+    h.textContent = d;
+    grid.appendChild(h);
+  });
+
+  const firstDay = getFirstDayOfMonth(curMonth);
+  const daysInMonth = getDaysInMonth(curMonth);
+  const specialSet = new Set((SPECIAL_DAYS[curMonth] || []).map(s => s.d));
+
+  for (let i = 0; i < firstDay; i++) {
+    const e = document.createElement('div'); e.className = 'cal-day empty'; grid.appendChild(e);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const cell = document.createElement('div');
+    const key = `${curMonth}-${d}`;
+    const dayData = DAY_DATA[key];
+    let classes = 'cal-day';
+    if (d === today.getDate() && curMonth === today.getMonth()) classes += ' today';
+    if (d === selectedDay && curMonth === selectedMonth) classes += ' selected';
+    if (specialSet.has(d)) classes += ' special';
+    if (dayData) {
+      if (dayData.tithi && dayData.tithi.includes('Amavasya')) classes += ' amavasya';
+      if (dayData.tithi && dayData.tithi.includes('Poornima')) classes += ' poornima';
+    }
+    cell.className = classes;
+
+    const numDiv = document.createElement('div');
+    numDiv.className = 'day-num';
+    numDiv.textContent = d;
+    cell.appendChild(numDiv);
+
+    if (dayData && dayData.tithi) {
+      const tDiv = document.createElement('div');
+      tDiv.className = 'day-tithi';
+      tDiv.textContent = dayData.tithi;
+      cell.appendChild(tDiv);
+    }
+
+    const dow = (firstDay + d - 1) % 7;
+    cell.addEventListener('click', () => selectDay(d, dow));
+    grid.appendChild(cell);
+  }
+
+  renderSpecialDays();
+
+  if (curMonth === selectedMonth) {
+    const fd = getFirstDayOfMonth(selectedMonth);
+    const dow = (fd + selectedDay - 1) % 7;
+    showDayDetail(selectedDay, selectedMonth, dow);
+  }
+}
+
+function renderSpecialDays() {
+  const list = document.getElementById('special-days-list');
+  document.getElementById('special-month-label').textContent = MONTH_NAMES_TITLE[curMonth];
+  const specials = SPECIAL_DAYS[curMonth] || [];
+  list.innerHTML = '';
+  specials.forEach(s => {
+    const item = document.createElement('div');
+    item.className = 'special-item';
+    item.innerHTML = `<span class="special-date">${s.d}</span><span class="special-desc">${s.desc}</span>`;
+    item.addEventListener('click', () => {
+      const fd = getFirstDayOfMonth(curMonth);
+      const dow = (fd + s.d - 1) % 7;
+      selectDay(s.d, dow);
+    });
+    list.appendChild(item);
+  });
+}
+
+function selectDay(day, dow) {
+  selectedDay = day;
+  selectedMonth = curMonth;
+  renderCalendar();
+}
+
+function showDayDetail(day, month, dayOfWeek) {
+  const key = `${month}-${day}`;
+  const data = DAY_DATA[key];
+  const si = getCalInfo(month, day);
+  const specials = (SPECIAL_DAYS[month] || []).filter(s => s.d === day);
+  const dayName = FULL_DAY_NAMES[dayOfWeek];
+  const monthName = MONTH_NAMES_TITLE[month];
+
+  const card = document.getElementById('detail-card');
+  card.innerHTML = `
+    <div class="detail-header">
+      <div class="detail-header-left">
+        <div class="detail-date-big">${day}</div>
+        <div class="detail-date-text">
+          <div class="detail-day-name">${dayName}</div>
+          <div class="detail-month-year">${monthName} 2026</div>
+        </div>
+      </div>
+      <div class="cal-info-grid">
+        <div class="cal-info-item">
+          <div class="cal-info-label">🪷 Samvatsara</div>
+          <div class="cal-info-value">${si.samvat}</div>
+        </div>
+        <div class="cal-info-item">
+          <div class="cal-info-label">☀ Ayana</div>
+          <div class="cal-info-value">${si.ayana}</div>
+        </div>
+        <div class="cal-info-item">
+          <div class="cal-info-label">🌿 Rutu</div>
+          <div class="cal-info-value">${si.rutu}</div>
+        </div>
+        <div class="cal-info-item">
+          <div class="cal-info-label">🌙 Chandra Masa</div>
+          <div class="cal-info-value">${si.chandra}</div>
+        </div>
+        <div class="cal-info-item">
+          <div class="cal-info-label">⭐ Soura Masa</div>
+          <div class="cal-info-value">${si.soura}</div>
+        </div>
+
+      </div>
+    </div>
+
+    ${data ? `
+    <div class="pancha-grid">
+      <div class="pancha-card">
+        <span class="pancha-icon">🌓</span>
+        <div class="pancha-label">Paksha</div>
+        <div class="pancha-value">${getPakshaLabel(data.tithi, month, day)}</div>
+      </div>
+      <div class="pancha-card">
+        <span class="pancha-icon">📅</span>
+        <div class="pancha-label">Tithi</div>
+        <div class="pancha-value">${data.tithi}</div>
+        ${data.tithi_end ? `<div class="pancha-time">until ${data.tithi_end}</div>` : ''}
+        ${data.tithi2 ? `<div class="pancha-value" style="margin-top:4px;font-size:0.82rem;color:var(--text-muted)">${data.tithi2}</div><div class="pancha-time">until ${data.tithi2_end||''}</div>` : ''}
+      </div>
+      <div class="pancha-card">
+        <span class="pancha-icon">🗓</span>
+        <div class="pancha-label">Vasara</div>
+        <div class="pancha-value">${dayName}</div>
+      </div>
+      <div class="pancha-card">
+        <span class="pancha-icon">⭐</span>
+        <div class="pancha-label">Nakshatra</div>
+        <div class="pancha-value">${data.nakshatra}</div>
+        ${data.nakshatra_end ? `<div class="pancha-time">until ${data.nakshatra_end}</div>` : ''}
+        ${data.nakshatra2 ? `<div class="pancha-value" style="margin-top:4px;font-size:0.82rem;color:var(--text-muted)">${data.nakshatra2}</div><div class="pancha-time">until ${data.nakshatra2_end||''}</div>` : ''}
+      </div>
+      <div class="pancha-card">
+        <span class="pancha-icon">🔆</span>
+        <div class="pancha-label">Yoga</div>
+        <div class="pancha-value">${data.yoga}</div>
+      </div>
+      <div class="pancha-card">
+        <span class="pancha-icon">🌀</span>
+        <div class="pancha-label">Karana</div>
+        <div class="pancha-value">${data.karana}</div>
+      </div>
+    </div>` : `
+    <div class="no-data" style="padding:28px 0">
+      <p style="color:var(--text-muted);font-style:italic">Detailed panchanga data not available for this date.<br>Please refer to the printed calendar.</p>
+    </div>`}
+
+    ${specials.length ? `
+    <div class="special-day-banner">
+      <div class="icon">🪔</div>
+      <div>
+        <h4>Special Observances</h4>
+        <p>${specials.map(s => s.desc).join('<br>')}</p>
+      </div>
+    </div>` : ''}
+
+
+  `;
+}
+
+// Amavasya dates (month 0-based, day) — after these dates it's Shukla Paksha
+const AMAVASYA_DATES = [
+  [0,18],[1,16],[2,18],[3,17],[4,16],[5,14],[6,13],[7,12],[8,10],[9,10],[10,8],[11,8]
+];
+// Poornima dates — after these dates it's Krishna Paksha  
+const POORNIMA_DATES = [
+  [0,2],[1,1],[2,2],[3,1],[4,30],[5,29],[6,29],[7,27],[8,26],[9,25],[10,24],[11,23]
+];
+
+function getPakshaLabel(tithi, month, day) {
+  if (tithi === "Amavasya") return "Krishna Paksha";
+  if (tithi === "Poornima") return "Shukla Paksha";
+
+  // Find the most recent anchor (Amavasya or Poornima) before this date
+  let lastAm = null, lastPo = null;
+
+  for (const [m, d] of AMAVASYA_DATES) {
+    if (m < month || (m === month && d < day)) lastAm = [m, d];
+  }
+  for (const [m, d] of POORNIMA_DATES) {
+    if (m < month || (m === month && d < day)) lastPo = [m, d];
+  }
+
+  // Which anchor is more recent?
+  const amDays = lastAm ? (lastAm[0] * 31 + lastAm[1]) : -1;
+  const poDays = lastPo ? (lastPo[0] * 31 + lastPo[1]) : -1;
+
+  if (amDays > poDays) return "Shukla Paksha";  // After Amavasya → Shukla
+  if (poDays > amDays) return "Krishna Paksha"; // After Poornima → Krishna
+  return "";
+}
+
+function getPaksha(tithi) {
+  const krishna = ["Pratipada","Dwiteeya","Triteeya","Chaturthi","Panchami","Shashthi","Shashti","Saptami","Ashtami","Navami","Dashami","Ekadashi","Dwadashi","Trayodashi","Chaturdashi","Amavasya"];
+  const shukla  = ["Pratipada","Dwiteeya","Triteeya","Chaturthi","Panchami","Shashthi","Shashti","Saptami","Ashtami","Navami","Dashami","Ekadashi","Dwadashi","Trayodashi","Chaturdashi","Poornima"];
+  if (!tithi) return "";
+  if (tithi === "Amavasya") return "Krishna Paksha";
+  if (tithi === "Poornima") return "Shukla Paksha";
+  // Paksha is stored in the data; derive from context via the calendar position
+  // Since we don't store paksha per day, we use a simple heuristic:
+  // Amavasya resets to Shukla, Poornima resets to Krishna
+  // But the cleanest approach is to add paksha to the data object — 
+  // for now return empty and we'll use the data.paksha field if present
+  return tithi === "Amavasya" ? "Krishna Paksha" : "";
+}
+
+function getMonthShloka(month) {
+  const shlokas = [
+    "कृष्णाय वासुदेवाय हरये परमात्मने । प्रणतः क्लेशनाशाय गोविन्दाय नमो नमः ॥",
+    "हर शम्भो महादेव विश्वेशामरवल्लभ । शिवशंकर सर्वात्मन् नीलकण्ठ नमोस्तु ते ॥",
+    "श्रीराम राम रामेति रमे रामे मनोरमे । सहस्रनाम तत्तुल्यं राम नाम वरानने ॥",
+    "बुद्धिबलं यशो धैर्यं निर्भयत्वं अरोगता । अजाड्यं वाक्पटुत्वं च हनूमत् स्मरणात् भवेत् ॥",
+    "यस्मात् क्षरमतीतोऽहं अक्षरादपि चोत्तमः । अतोऽस्मि लोके वेदे च प्रसितः पुरुषोत्तमः ॥",
+    "सुमुखौ सुन्दरतरौ सुनासौ सुखचित्तनू । सुराराधितपादाब्जौ रमानारायाणौ स्तुमः ॥",
+    "ब्रह्मांताः गुरवः साक्षात् इष्टं दैवं श्रियः पतिः । आचार्याः श्रीमदाचार्याः संतु जन्मनि जन्मनि ॥",
+    "ब्रह्मांताः गुरवः साक्षात् इष्टं दैवं श्रियः पतिः ॥",
+    "जातः कंसवधार्थाय भूभारहरणाय च कौरवाणां विनाशाय दैत्यानां निधनाय च ॥",
+    "सर्व मंगलमांगल्ये शिवे सर्वार्थसाधिके । शरण्ये त्र्यम्बके देवि नारायणि नमोस्तुते ॥",
+    "अश्वत्थामो बलिर्व्यासो हनुमान्च विभीषणः । कृपः परशुरामच सप्तैते चिरजीविनः ॥",
+    "यत्र योगेश्वरः कृष्णो यत्र पार्थो धनुर्धरः । तत्र श्रीर्विजयो भूतिः ध्रुवानीतिर्मतिर्मम ॥"
+  ];
+  return shlokas[month] || shlokas[0];
+}
+
+// Init
+renderCalendar();
+const fd = getFirstDayOfMonth(today.getMonth());
+const todayDow = (fd + today.getDate() - 1) % 7;
+showDayDetail(today.getDate(), today.getMonth(), todayDow);
+
+// ── Service Worker Registration ──────────────────────
+let newWorker;
+
+function applyUpdate() {
+  if (newWorker) {
+    newWorker.postMessage('SKIP_WAITING');
+  } else {
+    window.location.reload();
+  }
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(reg => {
+
+    // Check for updates every time the page gains focus
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) reg.update();
+    });
+
+    reg.addEventListener('updatefound', () => {
+      newWorker = reg.installing;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // New version is ready — show the banner
+          document.getElementById('update-banner').style.display = 'block';
+        }
+      });
+    });
+  });
+
+  // When SW activates new version, reload the page automatically
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
+  });
+}
+</script>
+
+</body>
+</html>
