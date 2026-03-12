@@ -1,5 +1,5 @@
 {
-  "name": "Panchanga 2026 — Shri Krishna Vrundavana",
+  "name": "Panchanga 2026 \u2014 Shri Krishna Vrundavana",
   "short_name": "Panchanga 2026",
   "description": "Hindu Panchanga calendar 2026 for Shri Krishna Vrundavana, Cary NC",
   "start_url": "/index.html",
@@ -9,13 +9,13 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
